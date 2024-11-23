@@ -14,6 +14,15 @@ public class User {
     private String email;
     private String role;
     private Double average_rating;
+    private String password;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     @Lob
     private byte[] profilePic; // For storing profile pictures as binary data

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 
 public class RegisterDto {
 
@@ -25,6 +26,8 @@ public class RegisterDto {
 
     @Pattern(regexp = "CONDUCTOR|PASSENGER", message = "Role must be either CONDUCTOR or PASSENGER")
     private String role;
+
+    private MultipartFile profilePic;
 
     public String getFirstName() {
         return firstName;
@@ -72,5 +75,13 @@ public class RegisterDto {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public MultipartFile getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(MultipartFile profilePic) {
+        this.profilePic = profilePic;
     }
 }

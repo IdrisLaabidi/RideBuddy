@@ -3,6 +3,8 @@ package com.fst.ridebuddy.services;
 import com.fst.ridebuddy.entities.AppUser;
 import com.fst.ridebuddy.repositories.AppUsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,5 +27,14 @@ public class AppUserService implements UserDetailsService {
                     .build();
         }
         return null;
+    }
+
+    public AppUser getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication.getPrincipal().equals("anonymousUser")) {
+            return null;
+        }
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return repo.findByEmail(userDetails.getUsername());
     }
 }

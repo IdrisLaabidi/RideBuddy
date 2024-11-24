@@ -1,18 +1,15 @@
 package com.fst.ridebuddy.models;
 
-import jakarta.validation.Valid;
+import com.fst.ridebuddy.entities.AppUser;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 
-public class RegisterDto {
+public class UpdateProfileDto {
 
-    @NotEmpty
     private String firstName;
 
-    @NotEmpty
     private String lastName;
 
     @NotEmpty
@@ -24,10 +21,17 @@ public class RegisterDto {
 
     private String confirmPassword;
 
-    @Pattern(regexp = "CONDUCTOR|PASSENGER", message = "Role must be either CONDUCTOR or PASSENGER")
+    private MultipartFile profilePic;
+
     private String role;
 
-    private MultipartFile profilePic;
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -69,13 +73,6 @@ public class RegisterDto {
         this.confirmPassword = confirmPassword;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 
     public MultipartFile getProfilePic() {
         return profilePic;
@@ -83,5 +80,17 @@ public class RegisterDto {
 
     public void setProfilePic(MultipartFile profilePic) {
         this.profilePic = profilePic;
+    }
+
+    public static UpdateProfileDto fromUser(AppUser user) {
+        UpdateProfileDto dto = new UpdateProfileDto();
+        dto.setFirstName(user.getFirst_name());
+        dto.setLastName(user.getLast_name());
+        dto.setEmail(user.getEmail());
+        dto.setRole(user.getRole());
+        dto.setPassword(""); // Leave blank for security reasons
+        dto.setConfirmPassword("");
+        dto.setProfilePic(null);
+        return dto;
     }
 }

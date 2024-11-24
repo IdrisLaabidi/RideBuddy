@@ -31,22 +31,29 @@
                 </li>
             </ul>
 
-            <form sec:authorize="isAuthenticated()" method="post" action="/logout">
-                <input type="hidden" th:name="${_csrf.parameterName}"
-                       th:value="${_csrf.token}"/>
-                <button type="submit" class="btn btn-danger">
-                    Logout
-                </button>
-            </form>
-
-            <ul class="navbar-nav me-3" sec:authorize="isAuthenticated()">
+            <ul class="navbar-nav ms-auto" sec:authorize="isAuthenticated()">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">
-                        User
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <!-- Profile Picture -->
+                        <img th:src="${user.getProfilePic() != null ? '/images/profile-pic' : '/images/placeholder.jpg'}"
+                             alt="Profile"
+                             class="rounded-circle me-2"
+                             style="width: 40px; height: 40px;">
+                        <span th:text="${user.getFirst_name()+' '+ user.getLast_name()}">JohnDoe</span>
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="/profile">Profile</a></li>
-                        <li><a class="dropdown-item" href="/">Home</a></li>
+                        <li><a class="dropdown-item" href="/setting">Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form sec:authorize="isAuthenticated()" method="post" action="/logout">
+                                <input type="hidden" th:name="${_csrf.parameterName}"
+                                       th:value="${_csrf.token}"/>
+                                <button type="submit" class="dropdown-item">
+                                    Logout
+                                </button>
+                            </form>
+                        </li>
                     </ul>
                 </li>
             </ul>
@@ -61,7 +68,7 @@
             <h1>Welcome to RideBuddy</h1>
             <p>Your trusted carpooling platform for seamless travel.</p>
             <!-- <img src="https://via.placeholder.com/800x400" alt="Carpooling" class="img-fluid rounded my-4"> -->
-            <img src="../images/rideBuddy.png" alt="Carpooling" class="img-fluid rounded my-4" onerror="this.src='https://via.placeholder.com/800x400'">
+            <img src="/rideBuddy.png" alt="Carpooling" class="img-fluid rounded my-4" onerror="this.src='https://via.placeholder.com/800x400'"/>
             <p>Connect with drivers and passengers to make your trips more enjoyable and cost-effective.</p>
         </div>
     </div>
@@ -116,7 +123,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Manage Bookings</h5>
                             <p class="card-text">View and cancel your ride bookings with ease.</p>
-                            <a href="/bookings/manage" class="btn btn-primary">Manage Bookings</a>
+                            <a href="/reservations/manage" class="btn btn-primary">Manage Bookings</a>
                         </div>
                     </div>
                 </div>

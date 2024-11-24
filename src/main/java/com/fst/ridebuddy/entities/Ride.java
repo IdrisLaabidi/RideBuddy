@@ -17,7 +17,7 @@ public class Ride {
     private String comments;
 
     @ManyToOne
-    @JoinColumn(name = "conductor_id")
+    @JoinColumn(name = "id_user")
     private AppUser conductor;
 
     @OneToMany(mappedBy = "ride", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -22,6 +22,7 @@ public class SecurityConfig {
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/logout").permitAll()
+                        .requestMatchers("/ride-details/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

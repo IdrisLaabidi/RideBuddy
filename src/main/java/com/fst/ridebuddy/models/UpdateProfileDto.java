@@ -23,6 +23,8 @@ public class UpdateProfileDto {
 
     private MultipartFile profilePic;
 
+    private byte[] oldProfilePic;
+
     private String role;
 
     public String getRole() {
@@ -82,6 +84,14 @@ public class UpdateProfileDto {
         this.profilePic = profilePic;
     }
 
+    public byte[] getOldProfilePic() {
+        return oldProfilePic;
+    }
+
+    public void setOldProfilePic(byte[] oldProfilePic) {
+        this.oldProfilePic = oldProfilePic;
+    }
+
     public static UpdateProfileDto fromUser(AppUser user) {
         UpdateProfileDto dto = new UpdateProfileDto();
         dto.setFirstName(user.getFirst_name());
@@ -90,7 +100,7 @@ public class UpdateProfileDto {
         dto.setRole(user.getRole());
         dto.setPassword(""); // Leave blank for security reasons
         dto.setConfirmPassword("");
-        dto.setProfilePic(null);
+        dto.setOldProfilePic(user.getProfilePic());
         return dto;
     }
 }

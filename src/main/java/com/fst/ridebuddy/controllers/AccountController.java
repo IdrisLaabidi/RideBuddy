@@ -14,7 +14,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import com.fst.ridebuddy.models.UpdateProfileDto;
 
 import java.io.IOException;
@@ -130,14 +129,12 @@ public class AccountController {
         AppUser currentUser = userService.getAuthenticatedUser();
 
         // Update first name if changed
-        if (updateProfileDto.getFirstName() != null
-                && !updateProfileDto.getFirstName().equals(currentUser.getFirst_name())) {
+        if (updateProfileDto.getFirstName() != null && !updateProfileDto.getFirstName().equals(currentUser.getFirst_name())) {
             currentUser.setFirst_name(updateProfileDto.getFirstName());
         }
 
         // Update last name if changed
-        if (updateProfileDto.getLastName() != null
-                && !updateProfileDto.getLastName().equals(currentUser.getLast_name())) {
+        if (updateProfileDto.getLastName() != null && !updateProfileDto.getLastName().equals(currentUser.getLast_name())) {
             currentUser.setLast_name(updateProfileDto.getLastName());
         }
 
@@ -153,7 +150,7 @@ public class AccountController {
             }
         }
 
-        // Handle profile picture update
+        // Handle profile picture update (optional)
         if (updateProfileDto.getProfilePic() != null && !updateProfileDto.getProfilePic().isEmpty()) {
             try {
                 if (!updateProfileDto.getProfilePic().getContentType().startsWith("image")) {
@@ -167,11 +164,18 @@ public class AccountController {
             } catch (IOException e) {
                 result.addError(new FieldError("updateProfileDto", "profilePic", "Error reading the uploaded file"));
             }
+        } else if (updateProfileDto.getOldProfilePic() != null) {
+            // Retain the old profile picture if no new one is provided
+            currentUser.setProfilePic(updateProfileDto.getOldProfilePic());
+        }
+
+        // Handle role update if it's not the same as the current user role
+        if (updateProfileDto.getRole() != null && !updateProfileDto.getRole().equals(currentUser.getRole())) {
+            currentUser.setRole(updateProfileDto.getRole());
         }
 
         // Handle validation errors
         if (result.hasErrors()) {
-            model.addAttribute("updateProfileDto", updateProfileDto);
             return "profile"; // Return to the profile page with error messages
         }
 
@@ -186,5 +190,6 @@ public class AccountController {
         model.addAttribute("user", currentUser); // Add updated user back to the model
         return "profile"; // Return to the profile page
     }
+
 
 }

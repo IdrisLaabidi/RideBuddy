@@ -17,11 +17,11 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "reviewer_id")
-    private User reviewer;
+    private AppUser reviewer;
 
     @ManyToOne
     @JoinColumn(name = "reviewed_id")
-    private User reviewed;
+    private AppUser reviewed;
 
     @ManyToOne
     @JoinColumn(name = "ride_id")
@@ -85,19 +85,19 @@ public class Review {
         this.behaviour = behaviour;
     }
 
-    public User getReviewer() {
+    public AppUser getReviewer() {
         return reviewer;
     }
 
-    public void setReviewer(User reviewer) {
+    public void setReviewer(AppUser reviewer) {
         this.reviewer = reviewer;
     }
 
-    public User getReviewed() {
+    public AppUser getReviewed() {
         return reviewed;
     }
 
-    public void setReviewed(User reviewed) {
+    public void setReviewed(AppUser reviewed) {
         this.reviewed = reviewed;
     }
 

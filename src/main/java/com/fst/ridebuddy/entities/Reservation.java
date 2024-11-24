@@ -13,7 +13,7 @@ public class Reservation {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private AppUser user;
 
     @ManyToOne
     @JoinColumn(name = "ride_id")
@@ -45,12 +45,12 @@ public class Reservation {
         this.reservedPlaces = reservedPlaces;
     }
 
-    public User getUser() {
+    public AppUser getUser() {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(AppUser appUser) {
+        this.user = appUser;
     }
 
     public Ride getRide() {

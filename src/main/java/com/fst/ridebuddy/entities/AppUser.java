@@ -4,25 +4,19 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-public class User {
+@Table(name = "user")
+public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_user;
 
     private String first_name;
     private String last_name;
+    @Column(unique = true , nullable = false)
     private String email;
     private String role;
     private Double average_rating;
     private String password;
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     @Lob
     private byte[] profilePic; // For storing profile pictures as binary data
@@ -44,6 +38,14 @@ public class User {
     private List<Ride> rides;
 
     // Getters and Setters
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public Long getId_user() {
         return id_user;

@@ -18,7 +18,7 @@ public class Ride {
 
     @ManyToOne
     @JoinColumn(name = "conductor_id")
-    private User conductor;
+    private AppUser conductor;
 
     @OneToMany(mappedBy = "ride", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Reservation> reservations;
@@ -76,11 +76,11 @@ public class Ride {
         this.comments = comments;
     }
 
-    public User getConductor() {
+    public AppUser getConductor() {
         return conductor;
     }
 
-    public void setConductor(User conductor) {
+    public void setConductor(AppUser conductor) {
         this.conductor = conductor;
     }
 

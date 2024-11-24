@@ -10,42 +10,47 @@
 <div class="container py-5">
   <h2 class="text-center mb-4">My Profile</h2>
   <hr/>
-  <div th:if="${success}" class="alert alert-success">
-    <p th:text="${success}"></p>
+  <div th:if="${success}"
+       class="alert alert-success alert-dismissible fade show " role="alert">
+    <strong>Profile updated Successfully !</strong>
+    <a class="ms-2" href="/">Home</a>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"
+            aria-label="Close"></button>
   </div>
   <div th:if="${error}" class="alert alert-danger">
     <p th:text="${error}"></p>
   </div>
-  <form id="profileForm">
+  <form id="profileForm" th:object="${updateProfileDto}" action="profile/update" method="post">
     <div class="row mb-3">
       <div class="col">
-        <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First name" aria-label="First name" th:value="${user.getFirst_name()}" disabled>
+        <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First name" aria-label="First name" th:field="${updateProfileDto.firstName}" disabled>
       </div>
       <div class="col">
-        <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last name" aria-label="Last name" th:value="${user.getLast_name()}" disabled>
+        <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last name" aria-label="Last name" th:field="${updateProfileDto.lastName}" disabled>
       </div>
     </div>
     <div class="mb-3">
       <label for="email" class="form-label">Email</label>
-      <input type="email" class="form-control" id="email" name="email" placeholder="Email" th:value="${user.getEmail()}" disabled>
+      <input type="email" class="form-control" id="email" name="email" placeholder="Email" th:field="${updateProfileDto.email}" disabled>
     </div>
     <div class="mb-3">
       <label for="role" class="form-label">Role</label>
-      <select class="form-select" id="role" name="role" th:value="${user.getRole()}" disabled>
-        <option value="CONDUCTOR" th:selected="${user.getRole() == 'CONDUCTOR'}">Conductor</option>
-        <option value="PASSENGER" th:selected="${user.getRole()== 'PASSENGER'}">Passenger</option>
+      <select class="form-select" id="role" name="role"  disabled>
+        <option value="CONDUCTOR" th:selected="${updateProfileDto.getRole() == 'CONDUCTOR'}">Conductor</option>
+        <option value="PASSENGER" th:selected="${updateProfileDto.getRole()== 'PASSENGER'}">Passenger</option>
       </select>
     </div>
     <div id="passwordFields" class="d-none">
       <div class="mb-3">
         <label for="newPassword" class="form-label">New Password</label>
-        <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="New Password">
+        <input type="password" class="form-control" id="newPassword" placeholder="New Password" th:field="${updateProfileDto.password}">
       </div>
       <div class="mb-3">
         <label for="confirmPassword" class="form-label">Confirm New Password</label>
-        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm New Password">
+        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm New Password" th:field="${updateProfileDto.confirmPassword}">
       </div>
     </div>
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <button type="button" class="btn btn-primary" id="editButton">Edit Profile</button>
     <button type="submit" class="btn btn-success d-none" id="saveButton">Save Changes</button>
     <button type="button" class="btn btn-secondary d-none" id="cancelButton">Cancel</button>
@@ -60,7 +65,7 @@
   const profileForm = document.getElementById('profileForm');
 
   editButton.addEventListener('click', () => {
-    profileForm.querySelectorAll('input, select').forEach(el => el.disabled = false);
+    profileForm.querySelectorAll('input').forEach(el => el.disabled = false);
     passwordFields.classList.remove('d-none');
     editButton.classList.add('d-none');
     saveButton.classList.remove('d-none');

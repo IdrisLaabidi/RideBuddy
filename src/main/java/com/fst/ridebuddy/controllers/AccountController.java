@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Objects;
+
 @Controller
 public class AccountController {
 
@@ -38,6 +40,30 @@ public class AccountController {
             Model model,
             @Valid @ModelAttribute RegisterDto registerDto,
             BindingResult result) {
+
+        if(Objects.equals(registerDto.getFirstName(), "")) {
+            result.addError(new FieldError("registerDto", "firstName", "First name is required"));
+        }
+
+        if(Objects.equals(registerDto.getLastName(), "")) {
+            result.addError(new FieldError("registerDto", "lastName", "last name is required"));
+        }
+
+        if(Objects.equals(registerDto.getEmail(), "")) {
+            result.addError(new FieldError("registerDto", "email", "Email is required"));
+        }
+
+        if(Objects.equals(registerDto.getPassword(), "")) {
+            result.addError(new FieldError("registerDto", "password", "Password is required"));
+        }
+
+        if(Objects.equals(registerDto.getConfirmPassword(), "")) {
+            result.addError(new FieldError("registerDto", "confirmPassword", "please, confirm password"));
+        }
+
+        if(Objects.equals(registerDto.getRole(), "")) {
+            result.addError(new FieldError("registerDto", "role", "Role is required"));
+        }
 
         if (!registerDto.getPassword().equals(registerDto.getConfirmPassword())) {
             result.addError(new FieldError("registerDto", "confirmPassword", "Passwords do not match"));

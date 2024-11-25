@@ -3,8 +3,6 @@ var apiKey = window.apiKey
 var start = window.start
 var end = window.end
 
-console.log(start)
-
 var map = L.map('map').setView([36.8, 10.2], 7);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'

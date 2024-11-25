@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Offer a Ride</title>
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <style>
+        .container {
+            max-width: 1000px;
+           margin-top: 2rem;
+
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            width: 100%;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="text-center mb-4">Create a Ride Offer</h2>
+
+    <!-- Form to create a ride -->
+    <form id="rideForm" th:action="@{/rides/create}" th:object="${RideDTO}" method="post">
+        <div class="form-group">
+            <label for="departureLocation">Departure Location</label>
+            <input type="text" id="departureLocation" th:field="*{departureLocation}" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-4 col-form-label">Start Governorate</label>
+            <div class="col-sm-8">
+                <select class="form-select" th:field="${RideDTO.statGov}">
+                    <option value="">Select Governorate</option>
+                    <option value="Tunis">Tunis</option>
+                    <option value="Ariana">Ariana</option>
+                    <option value="Beja">Beja</option>
+                    <option value="Ben Arous">Ben Arous</option>
+                    <option value="Bizerte">Bizerte</option>
+                    <option value="Gabes">Gabes</option>
+                    <option value="Gafsa">Gafsa</option>
+                    <option value="Jendouba">Jendouba</option>
+                    <option value="Kairouan">Kairouan</option>
+                    <option value="Kasserine">Kasserine</option>
+                    <option value="Kebili">Kebili</option>
+                    <option value="Kef">Kef</option>
+                    <option value="Mahdia">Mahdia</option>
+                    <option value="Manouba">Manouba</option>
+                    <option value="Medenine">Medenine</option>
+                    <option value="Monastir">Monastir</option>
+                    <option value="Nabeul">Nabeul</option>
+                    <option value="Sfax">Sfax</option>
+                    <option value="Sidi Bouzid">Sidi Bouzid</option>
+                    <option value="Siliana">Siliana</option>
+                    <option value="Sousa">Sousa</option>
+                    <option value="Tataouine">Tataouine</option>
+                    <option value="Tozeur">Tozeur</option>
+                    <option value="Zaghouan">Zaghouan</option>
+                </select>
+                <p th:if="${#fields.hasErrors('statGov')}"
+                   th:errorclass="text-danger"
+                   th:errors="${RideDTO.statGov}"></p>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="departureDate">Departure Date</label>
+            <input type="date" id="departureDate" th:field="*{departureDate}" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <label for="departureTime">Departure Time</label>
+            <input type="time" id="departureTime" th:field="*{departureTime}" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <label for="destination">Destination</label>
+            <input type="text" id="destination" th:field="*{destination}" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-4 col-form-label">Destination Governorate</label>
+            <div class="col-sm-8">
+                <select class="form-select" th:field="${RideDTO.endGov}">
+                    <option value="">Select Governorate</option>
+                    <option value="Tunis">Tunis</option>
+                    <option value="Ariana">Ariana</option>
+                    <option value="Beja">Beja</option>
+                    <option value="Ben Arous">Ben Arous</option>
+                    <option value="Bizerte">Bizerte</option>
+                    <option value="Gabes">Gabes</option>
+                    <option value="Gafsa">Gafsa</option>
+                    <option value="Jendouba">Jendouba</option>
+                    <option value="Kairouan">Kairouan</option>
+                    <option value="Kasserine">Kasserine</option>
+                    <option value="Kebili">Kebili</option>
+                    <option value="Kef">Kef</option>
+                    <option value="Mahdia">Mahdia</option>
+                    <option value="Manouba">Manouba</option>
+                    <option value="Medenine">Medenine</option>
+                    <option value="Monastir">Monastir</option>
+                    <option value="Nabeul">Nabeul</option>
+                    <option value="Sfax">Sfax</option>
+                    <option value="Sidi Bouzid">Sidi Bouzid</option>
+                    <option value="Siliana">Siliana</option>
+                    <option value="Sousa">Sousa</option>
+                    <option value="Tataouine">Tataouine</option>
+                    <option value="Tozeur">Tozeur</option>
+                    <option value="Zaghouan">Zaghouan</option>
+                </select>
+                <p th:if="${#fields.hasErrors('endGov')}"
+                   th:errorclass="text-danger"
+                   th:errors="${RideDTO.endGov}"></p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="availablePlaces">Available Places</label>
+            <input type="number" id="availablePlaces" th:field="*{availablePlaces}" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <label for="pricePerSeat">Price Per Seat</label>
+            <input type="number" step="1.00" id="pricePerSeat" th:field="*{pricePerSeat}" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <label for="comments">Comments</label>
+            <textarea id="comments" th:field="*{comments}" class="form-control" rows="3" placeholder="E.g., no pets, non-smoking" ></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Ride</button>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

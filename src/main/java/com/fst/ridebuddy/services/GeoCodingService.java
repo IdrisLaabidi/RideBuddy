@@ -27,7 +27,7 @@ public class GeoCodingService {
 
             String lat = bestMatch.path("lat").asText();
             String lon = bestMatch.path("lon").asText();
-            return lat + "," + lon;
+            return lon + "," + lat;
 
         } catch (Exception e) {
             e.printStackTrace();

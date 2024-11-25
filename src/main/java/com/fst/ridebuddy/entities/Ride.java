@@ -1,7 +1,9 @@
 package com.fst.ridebuddy.entities;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;  // Use LocalDateTime for departureTime
 import java.util.List;
 
 @Entity
@@ -11,13 +13,17 @@ public class Ride {
     private Long id_ride;
 
     private String departureLocation;
-    private LocalDateTime departureTime;
+    private LocalDateTime departureTime;  // Combined DateTime field
+    private String destination;
     private Integer availablePlaces;
-    private String status; //over or in-progress
+    private BigDecimal pricePerSeat;
+    private String status; // "over" or "in-progress"
     private String comments;
+    private String startCoordinate;
+    private String endCoordinate;
 
     @ManyToOne
-    @JoinColumn(name = "id_user")
+    @JoinColumn(name = "conductor_id", nullable = false)
     private AppUser conductor;
 
     @OneToMany(mappedBy = "ride", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -99,5 +105,36 @@ public class Ride {
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
     }
-}
 
+    public BigDecimal getPricePerSeat() {
+        return pricePerSeat;
+    }
+
+    public void setPricePerSeat(BigDecimal pricePerSeat) {
+        this.pricePerSeat = pricePerSeat;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
+    public String getStartCoordinate() {
+        return startCoordinate;
+    }
+
+    public void setStartCoordinate(String startCoordinate) {
+        this.startCoordinate = startCoordinate;
+    }
+
+    public String getEndCoordinate() {
+        return endCoordinate;
+    }
+
+    public void setEndCoordinate(String endCoordinate) {
+        this.endCoordinate = endCoordinate;
+    }
+}

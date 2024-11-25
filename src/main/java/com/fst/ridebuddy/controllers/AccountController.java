@@ -117,6 +117,7 @@ public class AccountController {
         AppUser user = userService.getAuthenticatedUser();
         model.addAttribute("updateProfileDto",UpdateProfileDto.fromUser(user));
         model.addAttribute("success", false);
+        model.addAttribute("user", user);
         return "profile";
     }
 

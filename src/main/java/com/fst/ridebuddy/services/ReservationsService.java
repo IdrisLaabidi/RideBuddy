@@ -29,7 +29,11 @@ public class ReservationsService {
                 .filter(reservation -> reservation.getUser().getId_user().equals(userId))
                 .toList();
     }
-
+    public List<Reservation> getReservationsByConductor(Long userId) {
+        return reservationsRepository.findAll().stream()
+                .filter(reservation -> reservation.getRide().getConductor().getId_user().equals(userId))
+                .toList();
+    }
     // Fetch reservation by ID
     public Reservation getReservationById(Long id) {
         return reservationsRepository.findById(id)

@@ -27,11 +27,17 @@ public class ReservationsController {
 
     // Load the reservation management page
     @GetMapping("/manage")
-    public String manageReservations(Model model) {
-        // Add a new reservationDto to the model if it's not already present
-        if (!model.containsAttribute("reservationDto")) {
-            model.addAttribute("reservationDto", new ReservationDto());
+    public String manageReservations(@RequestParam(value = "rideId", required = false) Long rideId, Model model) {
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
         }
+        // Add a new reservationDto to the model
+        ReservationDto reservationDto = new ReservationDto();
+        if (rideId != null) {
+            reservationDto.setRideId(rideId); // Preselect the ride ID if provided
+        }
+        model.addAttribute("reservationDto", reservationDto);
 
         // Fetch the authenticated user
         AppUser authenticatedUser = appUserService.getAuthenticatedUser();
@@ -40,8 +46,16 @@ public class ReservationsController {
         }
 
         // Fetch reservations for the current user
-        List<Reservation> userReservations = reservationsService.getReservationsByUser(authenticatedUser.getId_user());
-        model.addAttribute("reservations", userReservations);
+        if(user.getRole().equals("PASSENGER")){
+            List<Reservation> userReservations = reservationsService.getReservationsByUser(authenticatedUser.getId_user());
+            model.addAttribute("reservations", userReservations);
+        }
+
+        if(user.getRole().equals("CONDUCTOR")){
+            List<Reservation> userReservations = reservationsService.getReservationsByConductor(authenticatedUser.getId_user());
+            model.addAttribute("reservations", userReservations);
+        }
+
 
         return "manageReservations";
     }
@@ -94,6 +108,10 @@ public class ReservationsController {
     // Redirect to the update page
     @GetMapping("/update/{id}")
     public String updateReservationForm(@PathVariable Long id, Model model) {
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
         Reservation reservation = reservationsService.getReservationById(id);
         ReservationDto reservationDto = new ReservationDto();
         reservationDto.setRideId(reservation.getRide().getId_ride());

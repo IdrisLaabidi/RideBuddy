@@ -76,10 +76,10 @@
     <!-- When a user is logged in -->
     <div sec:authorize="isAuthenticated()">
         <h2 class="text-center">Dashboard</h2>
-        <p class="text-center">Here’s what you can do with RideBuddy:</p>
 
         <!-- Features for Conductors -->
         <div sec:authorize="hasRole('CONDUCTOR')">
+            <p class="text-center">Here’s what you can do with RideBuddy as a <b>Conductor</b>:</p>
             <div class="row g-4">
                 <div class="col-md-6">
                     <div class="card shadow-sm">
@@ -106,6 +106,7 @@
 
         <!-- Features for Passengers -->
         <div sec:authorize="hasRole('PASSENGER')">
+            <p class="text-center">Here’s what you can do with RideBuddy as a <b>Passenger</b>:</p>
             <div class="row g-4">
                 <div class="col-md-6">
                     <div class="card shadow-sm">
@@ -113,7 +114,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Find a Ride</h5>
                             <p class="card-text">Search for rides that suit your schedule and preferences.</p>
-                            <a href="/rides" class="btn btn-primary">Find Rides</a>
+                            <a href="/rides/all-rides" class="btn btn-primary">Find Rides</a>
                         </div>
                     </div>
                 </div>

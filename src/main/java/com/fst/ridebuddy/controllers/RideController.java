@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Controller
@@ -31,13 +32,17 @@ public class RideController {
 
     @GetMapping("/create")
     public String showCreateForm(Model model) {
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
         // Make sure the RideDTO is added to the model
         model.addAttribute("RideDTO", new RideDTO());
         return "rides/createRide";
     }
 
     @PostMapping("/create")
-    public String createRide(@ModelAttribute RideDTO rideDTO) {
+    public String createRide(@ModelAttribute RideDTO rideDTO, Model model) {
 
         LocalDateTime combinedDepartureTime = LocalDateTime.of(rideDTO.getDepartureDate(), rideDTO.getDepartureTime());
 
@@ -65,6 +70,7 @@ public class RideController {
         AppUser loggedInUser = appUserService.getAuthenticatedUser();
         if (loggedInUser != null) {
             ride.setConductor(loggedInUser);
+            model.addAttribute("user", loggedInUser);
         } else {
             // Handle the case where no user is logged in
             throw new RuntimeException("User is not authenticated");
@@ -87,6 +93,20 @@ public class RideController {
         model.addAttribute("apiKey", apiKey);
 
         return "rides/rideDetails";
+    }
+    @GetMapping("/all-rides")
+    public String getAllRides(Model model) {
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+        // Fetch all rides from the database
+        List<Ride> allRides = rideService.getAllRides();
+
+        // Add the rides to the model to pass them to the Thymeleaf template
+        model.addAttribute("rides", allRides);
+
+        return "rides/allRides"; // Return the view for displaying all rides
     }
 
 

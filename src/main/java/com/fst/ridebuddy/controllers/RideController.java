@@ -44,6 +44,10 @@ public class RideController {
 
     @PostMapping("/create")
     public String createRide(@ModelAttribute RideDTO rideDTO, Model model) {
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
 
         LocalDateTime combinedDepartureTime = LocalDateTime.of(rideDTO.getDepartureDate(), rideDTO.getDepartureTime());
 
@@ -123,29 +127,6 @@ public class RideController {
         Ride ride = rideService.getRideById(id);
         RideDTO rideDTO = RideMapper.toDTO(ride);
 
-    @GetMapping("/rides-near-me")
-    public String ridesNearMe (Model model) {
-        model.addAttribute("getLocation" , true);
-        return "rides/nearbyRides";
-    }
-
-    @GetMapping("/rides-near-me/{cords}")
-    public String ridesNearMe (Model model, @PathVariable String cords) {
-        model.addAttribute("getLocation" , false);
-        AppUser user = appUserService.getAuthenticatedUser();
-        if (user != null) {
-            model.addAttribute("user", user);
-        }
-        String [] cordsArray = cords.split(",");
-        double lat = Double.parseDouble(cordsArray[0]);
-        double lon = Double.parseDouble(cordsArray[1]);
-        double [] userCords = {lat,lon};
-        List<Ride> ridesSorted = rideService.getRidesSortedByProximity(userCords);
-        model.addAttribute("sortedRides", ridesSorted);
-        return "rides/nearbyRides";
-
-    }
-
         // Add RideDTO to the model
         model.addAttribute("RideDTO", rideDTO);
 
@@ -196,6 +177,38 @@ public class RideController {
         }
         rideService.deleteRide(id);
         return "redirect:/rides/manage";
+    }
+
+    @GetMapping("/rides-near-me")
+    public String ridesNearMe (Model model) {
+        model.addAttribute("getLocation" , true);
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+        return "rides/nearbyRides";
+    }
+
+    @GetMapping("/rides-near-me/{cords}")
+    public String ridesNearMe (Model model, @PathVariable String cords) {
+        model.addAttribute("getLocation" , false);
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+        String [] cordsArray = cords.split(",");
+        double lat = Double.parseDouble(cordsArray[0]);
+        double lon = Double.parseDouble(cordsArray[1]);
+        double [] userCords = {lat,lon};
+        List<Ride> ridesSorted = rideService.getRidesSortedByProximity(userCords);
+        List<RideDTO> rides = new java.util.ArrayList<>(List.of());
+        for(Ride ride : ridesSorted){
+            rides.add(RideMapper.toDTO(ride));
+        }
+        model.addAttribute("rides", rides);
+        model.addAttribute("sortedRides", ridesSorted);
+        return "rides/nearbyRides";
+
     }
 
 

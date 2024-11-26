@@ -23,6 +23,7 @@
 </head>
 <body>
 <div class="container">
+    <div th:replace="fragments/navbar :: navbar(user=${user})"></div>
     <div class="dashboard-header text-center">
         <h2>Ride Management Dashboard</h2>
         <p>Monitor and manage all offered rides at a glance.</p>

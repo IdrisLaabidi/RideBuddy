@@ -17,9 +17,27 @@ public class RideDTO {
     private String comments;
     private String statGov;
     private String endGov;
+    private String startCoordinate;
+    private String endCoordinate;
 
     // Getters and Setters
 
+
+    public String getEndCoordinate() {
+        return endCoordinate;
+    }
+
+    public void setEndCoordinate(String endCoordinate) {
+        this.endCoordinate = endCoordinate;
+    }
+
+    public String getStartCoordinate() {
+        return startCoordinate;
+    }
+
+    public void setStartCoordinate(String startCoordinate) {
+        this.startCoordinate = startCoordinate;
+    }
 
     public String getStatGov() {
         return statGov;

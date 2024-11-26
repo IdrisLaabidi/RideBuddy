@@ -19,6 +19,8 @@ public class RideMapper {
         rideDTO.setComments(ride.getComments());
         rideDTO.setStatGov(ride.getStatGov());
         rideDTO.setEndGov(ride.getEndGov());
+        rideDTO.setStartCoordinate(ride.getStartCoordinate());
+        rideDTO.setEndCoordinate(ride.getEndCoordinate());
         return rideDTO;
     }
 

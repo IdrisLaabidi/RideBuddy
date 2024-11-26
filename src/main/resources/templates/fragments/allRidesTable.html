@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<div th:fragment="ridesTable (rides)">
+<table class="table table-bordered table-striped">
+  <thead>
+  <tr>
+    <th>#</th>
+    <th>Departure Location</th>
+    <th>Destination</th>
+    <th>Departure Time</th>
+    <th>Available Places</th>
+    <th>Price per Seat</th>
+    <th>Status</th>
+    <th>Conductor</th>
+    <th>Comments</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="ride, iterStat : ${rides}">
+    <td th:text="${iterStat.index + 1}"></td>
+    <td th:text="${ride.departureLocation}"></td>
+    <td th:text="${ride.destination}"></td>
+    <td th:text="${#temporals.format(ride.departureTime, 'yyyy-MM-dd HH:mm')}"></td>
+    <td th:text="${ride.availablePlaces}"></td>
+    <td th:text="${ride.pricePerSeat} + ' TND'"></td>
+    <td th:text="${ride.status}"></td>
+    <td th:text="${ride.conductor.first_name} + ' ' + ${ride.conductor.last_name}"></td>
+    <td th:text="${ride.comments}"></td>
+    <td>
+      <a th:href="@{/reservations/manage(rideId=${ride.id_ride})}" class="btn btn-primary btn-sm">Make a Reservation</a>
+      <a th:href="@{/rides/ride-details/{id}(id=${ride.id_ride})}" class="btn btn-secondary btn-sm">Show Details</a>
+
+    </td>
+  </tr>
+  </tbody>
+</table>
+</div>
+</body>
+</html>

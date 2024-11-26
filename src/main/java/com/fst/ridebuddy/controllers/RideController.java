@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Controller
@@ -87,6 +88,29 @@ public class RideController {
         model.addAttribute("apiKey", apiKey);
 
         return "rides/rideDetails";
+    }
+
+    @GetMapping("/rides-near-me")
+    public String ridesNearMe (Model model) {
+        model.addAttribute("getLocation" , true);
+        return "rides/nearbyRides";
+    }
+
+    @GetMapping("/rides-near-me/{cords}")
+    public String ridesNearMe (Model model, @PathVariable String cords) {
+        model.addAttribute("getLocation" , false);
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+        String [] cordsArray = cords.split(",");
+        double lat = Double.parseDouble(cordsArray[0]);
+        double lon = Double.parseDouble(cordsArray[1]);
+        double [] userCords = {lat,lon};
+        List<Ride> ridesSorted = rideService.getRidesSortedByProximity(userCords);
+        model.addAttribute("sortedRides", ridesSorted);
+        return "rides/nearbyRides";
+
     }
 
 

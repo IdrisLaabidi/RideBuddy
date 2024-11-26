@@ -9,4 +9,5 @@ public interface RideService {
     List<Ride> getAllRides();
     Ride updateRide(Long id, Ride updatedRide);
     void deleteRide(Long id);
+    List<Ride> getRidesSortedByProximity(double [] userLocation);
 }

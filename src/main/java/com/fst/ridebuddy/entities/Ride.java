@@ -137,4 +137,26 @@ public class Ride {
     public void setEndCoordinate(String endCoordinate) {
         this.endCoordinate = endCoordinate;
     }
+
+    public double[] parseCoordinates() {
+        if (startCoordinate == null || startCoordinate.isEmpty()) {
+            throw new IllegalArgumentException("Start coordinate is empty or null");
+        }
+
+        String[] coords = startCoordinate.split(",");
+
+        if (coords.length != 2) {
+            throw new IllegalArgumentException("Invalid coordinate format. Expected 'longitude,latitude'");
+        }
+
+        try {
+            double longitude = Double.parseDouble(coords[0].trim());
+            double latitude = Double.parseDouble(coords[1].trim());
+
+            return new double[]{longitude, latitude};
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid number format in coordinates", e);
+        }
+    }
+
 }

@@ -2,9 +2,14 @@ package com.fst.ridebuddy.controllers;
 
 import com.fst.ridebuddy.entities.AppUser;
 import com.fst.ridebuddy.entities.Reservation;
+import com.fst.ridebuddy.entities.Ride;
 import com.fst.ridebuddy.models.ReservationDto;
+import com.fst.ridebuddy.models.RideDTO;
 import com.fst.ridebuddy.services.AppUserService;
 import com.fst.ridebuddy.services.ReservationsService;
+import com.fst.ridebuddy.services.RideMapper;
+import com.fst.ridebuddy.services.RideService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +23,8 @@ import java.util.List;
 @Controller
 @RequestMapping("/reservations")
 public class ReservationsController {
+    @Autowired
+    private RideService rideService;
 
     @Autowired
     private ReservationsService reservationsService;
@@ -56,6 +63,11 @@ public class ReservationsController {
             model.addAttribute("reservations", userReservations);
         }
 
+        // Fetch all rides from the database
+        List<Ride> allRides = rideService.getAllRides();
+
+        // Add the rides to the model to pass them to the Thymeleaf template
+        model.addAttribute("rides", allRides);
 
         return "manageReservations";
     }
@@ -144,4 +156,25 @@ public class ReservationsController {
 
         return "redirect:/reservations/manage";
     }
+
+    @PostMapping("/accept/{id}")
+    public String updateStatus(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("reservationDto") Reservation reservation,
+            Model model) {
+        reservationsService.updateReservationStatus(id, "accepted");
+
+        Reservation res = reservationsService.getReservationById(id);
+        Long ride_id = res.getRide().getId_ride();
+        Ride existingRide = rideService.getRideById(ride_id);
+        Integer reservedPlaces = res.getReservedPlaces();
+        Integer availablePlaces = existingRide.getAvailablePlaces();
+        existingRide.setAvailablePlaces(availablePlaces - reservedPlaces);
+        rideService.updateRide(existingRide.getId_ride(), existingRide);
+
+        return "redirect:/reservations/manage";
+    }
+
+
+
 }

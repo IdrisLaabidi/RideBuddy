@@ -7,6 +7,7 @@ import com.fst.ridebuddy.services.AppUserService;
 import com.fst.ridebuddy.services.GeoCodingService;
 import com.fst.ridebuddy.services.RideService;
 import com.fst.ridebuddy.services.RideMapper;
+import jakarta.persistence.Id;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -101,6 +102,22 @@ public class RideController {
 
         return "rides/rideDetails";
     }
+
+    @GetMapping("/myRides")
+    public String getMyRides(Model model) {
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+        // Fetch all rides from the database
+        List<Ride> allRides = rideService.getAllRidesByUserId(user.getId_user());
+
+        // Add the rides to the model to pass them to the Thymeleaf template
+        model.addAttribute("rides", allRides);
+
+        return "rides/allRides";
+    }
+
     @GetMapping("/all-rides")
     public String getAllRides(Model model) {
         AppUser user = appUserService.getAuthenticatedUser();
@@ -113,7 +130,7 @@ public class RideController {
         // Add the rides to the model to pass them to the Thymeleaf template
         model.addAttribute("rides", allRides);
 
-        return "rides/allRides"; // Return the view for displaying all rides
+        return "rides/allRides";
     }
 
     @GetMapping("/manage/edit/{id}")
@@ -133,8 +150,8 @@ public class RideController {
         return "rides/editRide"; // Render the edit ride page
     }
 
-    @PostMapping("/manage/edit")
-    public String updateRide(
+    @PostMapping("/manage/edit/{id}")
+    public String updateRide(@PathVariable("id") Long id,
             @ModelAttribute("RideDTO") RideDTO rideDTO,
             Model model
     ) {
@@ -164,8 +181,8 @@ public class RideController {
         // Update the ride in the database
         rideService.updateRide(existingRide.getId_ride(), existingRide);
 
-        // Redirect to home page after successful update
-        return "redirect:/rides/manage";
+
+        return "redirect:/rides/all-rides";
     }
 
 
@@ -208,6 +225,25 @@ public class RideController {
         model.addAttribute("rides", rides);
         model.addAttribute("sortedRides", ridesSorted);
         return "rides/nearbyRides";
+
+    }
+
+
+    @PostMapping("/manage/make-over/{id}")
+    public String updateState(@ModelAttribute("RideDTO") RideDTO rideDTO,
+                              Model model , @PathVariable Long id
+                              ) {
+        // Ensure authenticated user info is added to the model
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+        // Map RideDTO back to Ride entity
+        Ride existingRide = rideService.getRideById(id);
+        existingRide.setStatus("over");
+        rideService.updateRide(existingRide.getId_ride(), existingRide);
+        return "redirect:/rides/myRides";
+
 
     }
 

@@ -9,6 +9,7 @@ import com.fst.ridebuddy.services.AppUserService;
 import com.fst.ridebuddy.services.ReservationsService;
 import com.fst.ridebuddy.services.RideMapper;
 import com.fst.ridebuddy.services.RideService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,24 +53,32 @@ public class ReservationsController {
         }
 
         // Fetch reservations for the current user
-        if(user.getRole().equals("PASSENGER")){
+
             List<Reservation> userReservations = reservationsService.getReservationsByUser(authenticatedUser.getId_user());
             model.addAttribute("reservations", userReservations);
-        }
 
-        if(user.getRole().equals("CONDUCTOR")){
-            List<Reservation> userReservations = reservationsService.getReservationsByConductor(authenticatedUser.getId_user());
-            model.addAttribute("reservations", userReservations);
-        }
-
-        // Fetch all rides from the database
-        List<Ride> allRides = rideService.getAllRides();
-
-        // Add the rides to the model to pass them to the Thymeleaf template
-        model.addAttribute("rides", allRides);
 
         return "manageReservations";
     }
+
+    @GetMapping("/manage/passengerReservations")
+    public String managePassengerReservations(
+            @RequestParam(value = "rideId", required = false) Long rideId, Model model) {
+        // Fetch the authenticated user
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user == null) {
+            throw new IllegalStateException("No authenticated user found.");
+        }
+
+        model.addAttribute("user", user);
+
+        // Fetch reservations for rides conducted by the authenticated user
+        List<Reservation> userReservations = reservationsService.getReservationsByConductor(user.getId_user());
+        model.addAttribute("reservations", userReservations);
+
+        return "manageReservations";
+    }
+
 
     // Create a new reservation
     @PostMapping("/create")
@@ -155,4 +164,29 @@ public class ReservationsController {
 
         return "redirect:/reservations/manage";
     }
+
+    @PostMapping("/status/{id}")
+    public String updateStatus(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("reservationDto") Reservation reservation,
+            @RequestParam String status,
+            Model model) {
+        reservationsService.updateReservationStatus(id, status);
+
+        if(status.equals("Accepted")){
+            Reservation res = reservationsService.getReservationById(id);
+            Long ride_id = res.getRide().getId_ride();
+            Ride existingRide = rideService.getRideById(ride_id);
+            Integer reservedPlaces = res.getReservedPlaces();
+            Integer availablePlaces = existingRide.getAvailablePlaces();
+            existingRide.setAvailablePlaces(availablePlaces - reservedPlaces);
+            rideService.updateRide(existingRide.getId_ride(), existingRide);
+
+        }
+
+        return "redirect:/reservations/manage/passengerReservations";
+    }
+
+
+
 }

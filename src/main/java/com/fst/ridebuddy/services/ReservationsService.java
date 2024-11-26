@@ -52,6 +52,12 @@ public class ReservationsService {
         reservationsRepository.save(reservation);
     }
 
+    public void updateReservationStatus(Long reservationId, String status) {
+        Reservation reservation = getReservationById(reservationId);
+        reservation.setStatus(status);
+        reservationsRepository.save(reservation);
+    }
+
     // Create a new reservation
     public Reservation createReservation(Long rideId, Long userId, int reservedPlaces) {
         // Fetch the ride by ID
@@ -76,7 +82,7 @@ public class ReservationsService {
         reservation.setRide(ride);
         reservation.setUser(user);
         reservation.setReservedPlaces(reservedPlaces);
-        reservation.setStatus("PENDING"); // Example status; can be adjusted based on business logic
+        reservation.setStatus("Pending"); // Example status; can be adjusted based on business logic
 
         return reservationsRepository.save(reservation);
     }

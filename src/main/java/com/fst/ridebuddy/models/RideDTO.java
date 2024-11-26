@@ -2,6 +2,7 @@ package com.fst.ridebuddy.models;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class RideDTO {
@@ -57,7 +58,7 @@ public class RideDTO {
     }
 
     public void setDepartureDate(LocalDate departureDate) {
-        this.departureDate = departureDate;
+        this.departureDate = LocalDate.from(departureDate.atStartOfDay());
     }
 
     public LocalTime getDepartureTime() {

@@ -6,6 +6,7 @@ import com.fst.ridebuddy.models.RideDTO;
 import com.fst.ridebuddy.services.AppUserService;
 import com.fst.ridebuddy.services.GeoCodingService;
 import com.fst.ridebuddy.services.RideService;
+import com.fst.ridebuddy.services.RideMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,13 +33,17 @@ public class RideController {
 
     @GetMapping("/create")
     public String showCreateForm(Model model) {
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
         // Make sure the RideDTO is added to the model
         model.addAttribute("RideDTO", new RideDTO());
         return "rides/createRide";
     }
 
     @PostMapping("/create")
-    public String createRide(@ModelAttribute RideDTO rideDTO) {
+    public String createRide(@ModelAttribute RideDTO rideDTO, Model model) {
 
         LocalDateTime combinedDepartureTime = LocalDateTime.of(rideDTO.getDepartureDate(), rideDTO.getDepartureTime());
 
@@ -61,11 +66,14 @@ public class RideController {
         ride.setComments(rideDTO.getComments());
         ride.setStartCoordinate(startCords);
         ride.setEndCoordinate(endCords);
+        ride.setStatGov(rideDTO.getStatGov());
+        ride.setEndGov(rideDTO.getEndGov());
 
         // Retrieve the logged-in user from the security context
         AppUser loggedInUser = appUserService.getAuthenticatedUser();
         if (loggedInUser != null) {
             ride.setConductor(loggedInUser);
+            model.addAttribute("user", loggedInUser);
         } else {
             // Handle the case where no user is logged in
             throw new RuntimeException("User is not authenticated");
@@ -89,6 +97,31 @@ public class RideController {
 
         return "rides/rideDetails";
     }
+    @GetMapping("/all-rides")
+    public String getAllRides(Model model) {
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+        // Fetch all rides from the database
+        List<Ride> allRides = rideService.getAllRides();
+
+        // Add the rides to the model to pass them to the Thymeleaf template
+        model.addAttribute("rides", allRides);
+
+        return "rides/allRides"; // Return the view for displaying all rides
+    }
+
+    @GetMapping("/manage/edit/{id}")
+    public String showEditRidePage(@PathVariable("id") Long id, Model model) {
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+
+        // Fetch the ride entity and map it to RideDTO
+        Ride ride = rideService.getRideById(id);
+        RideDTO rideDTO = RideMapper.toDTO(ride);
 
     @GetMapping("/rides-near-me")
     public String ridesNearMe (Model model) {
@@ -113,6 +146,57 @@ public class RideController {
 
     }
 
+        // Add RideDTO to the model
+        model.addAttribute("RideDTO", rideDTO);
+
+        return "rides/editRide"; // Render the edit ride page
+    }
+
+    @PostMapping("/manage/edit")
+    public String updateRide(
+            @ModelAttribute("RideDTO") RideDTO rideDTO,
+            Model model
+    ) {
+        // Ensure authenticated user info is added to the model
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+
+        // Map RideDTO back to Ride entity
+        Ride existingRide = rideService.getRideById(rideDTO.getId_ride());
+
+        // Update fields in the existing entity
+        existingRide.setDepartureLocation(rideDTO.getDepartureLocation());
+        existingRide.setDestination(rideDTO.getDestination());
+        existingRide.setDepartureTime(
+                LocalDateTime.of(rideDTO.getDepartureDate(), rideDTO.getDepartureTime()));
+        existingRide.setAvailablePlaces(rideDTO.getAvailablePlaces());
+        existingRide.setPricePerSeat(rideDTO.getPricePerSeat());
+        existingRide.setComments(rideDTO.getComments());
+        existingRide.setStartCoordinate(geoCodingService.getCoordinates(
+                rideDTO.getDepartureLocation() + "," + rideDTO.getStatGov() + ",Tunisia"));
+        existingRide.setEndCoordinate(geoCodingService.getCoordinates(
+                rideDTO.getDestination() + "," + rideDTO.getEndGov() + ",Tunisia"));
+        existingRide.setStatGov(rideDTO.getStatGov());
+        existingRide.setEndGov(rideDTO.getEndGov());
+        // Update the ride in the database
+        rideService.updateRide(existingRide.getId_ride(), existingRide);
+
+        // Redirect to home page after successful update
+        return "redirect:/rides/manage";
+    }
+
+
+    @GetMapping("/manage/delete/{id}")
+    public String deleteRide(@PathVariable("id") Long id, Model model) {
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+        rideService.deleteRide(id);
+        return "redirect:/rides/manage";
+    }
 
 
 }

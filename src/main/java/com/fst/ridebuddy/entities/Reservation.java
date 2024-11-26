@@ -12,11 +12,11 @@ public class Reservation {
     private Integer reservedPlaces;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "id_user")
     private AppUser user;
 
     @ManyToOne
-    @JoinColumn(name = "ride_id")
+    @JoinColumn(name = "id_ride")
     private Ride ride;
 
     // Getters and Setters

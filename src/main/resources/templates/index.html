@@ -70,7 +70,7 @@
             <h1>Welcome to RideBuddy</h1>
             <p>Your trusted carpooling platform for seamless travel.</p>
             <!-- <img src="https://via.placeholder.com/800x400" alt="Carpooling" class="img-fluid rounded my-4"> -->
-            <img src="../images/rideBuddy.png" alt="Carpooling" class="img-fluid rounded my-4" onerror="this.src='https://via.placeholder.com/800x400'">
+            <img src="/rideBuddy.png" alt="Carpooling" class="img-fluid rounded my-4" onerror="this.src='https://via.placeholder.com/800x400'"/>
             <p>Connect with drivers and passengers to make your trips more enjoyable and cost-effective.</p>
         </div>
     </div>
@@ -78,10 +78,10 @@
     <!-- When a user is logged in -->
     <div sec:authorize="isAuthenticated()">
         <h2 class="text-center">Dashboard</h2>
-        <p class="text-center">Here’s what you can do with RideBuddy:</p>
 
         <!-- Features for Conductors -->
         <div sec:authorize="hasRole('CONDUCTOR')">
+            <p class="text-center">Here’s what you can do with RideBuddy as a <b>Conductor</b>:</p>
             <div class="row g-4">
                 <div class="col-md-6">
                     <div class="card shadow-sm">
@@ -108,6 +108,7 @@
 
         <!-- Features for Passengers -->
         <div sec:authorize="hasRole('PASSENGER')">
+            <p class="text-center">Here’s what you can do with RideBuddy as a <b>Passenger</b>:</p>
             <div class="row g-4">
                 <div class="col-md-6">
                     <div class="card shadow-sm">
@@ -115,7 +116,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Find a Ride</h5>
                             <p class="card-text">Search for rides that suit your schedule and preferences.</p>
-                            <a href="/rides" class="btn btn-primary">Find Rides</a>
+                            <a href="/rides/all-rides" class="btn btn-primary">Find Rides</a>
                         </div>
                     </div>
                 </div>
@@ -125,7 +126,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Manage Bookings</h5>
                             <p class="card-text">View and cancel your ride bookings with ease.</p>
-                            <a href="/bookings/manage" class="btn btn-primary">Manage Bookings</a>
+                            <a href="/reservations/manage" class="btn btn-primary">Manage Bookings</a>
                         </div>
                     </div>
                 </div>

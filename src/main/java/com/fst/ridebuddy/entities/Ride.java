@@ -21,6 +21,8 @@ public class Ride {
     private String comments;
     private String startCoordinate;
     private String endCoordinate;
+    private String statGov;
+    private String endGov;
 
     @ManyToOne
     @JoinColumn(name = "conductor_id", nullable = false)
@@ -136,5 +138,21 @@ public class Ride {
 
     public void setEndCoordinate(String endCoordinate) {
         this.endCoordinate = endCoordinate;
+    }
+
+    public String getStatGov() {
+        return statGov;
+    }
+
+    public void setStatGov(String statGov) {
+        this.statGov = statGov;
+    }
+
+    public String getEndGov() {
+        return endGov;
+    }
+
+    public void setEndGov(String endGov) {
+        this.endGov = endGov;
     }
 }

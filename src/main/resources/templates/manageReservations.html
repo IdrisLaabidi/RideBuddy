@@ -64,6 +64,71 @@
 
 <!-- Conductor Section (Styled Similar to Passenger) -->
 <div th:if="${user.getRole() == 'CONDUCTOR'}" class="container py-5">
+  <div class="container">
+    <div class="dashboard-header text-center">
+      <h2>Ride Management Dashboard</h2>
+    </div>
+
+    <!-- Ride Table -->
+    <table class="table table-striped ">
+      <thead class="table">
+      <tr>
+        <th>Departure Location</th>
+        <th>Departure Date & Time</th>
+        <th>Destination</th>
+        <th>Available Places</th>
+        <th>Price Per Seat</th>
+        <th>Status</th>
+        <th>Visualize the ride</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- Loop through the rides -->
+      <tr th:each="ride : ${rides}">
+
+        <td th:text="${ride.departureLocation}"></td>
+        <td>
+          <span th:text="${ride.departureTime.toLocalDate()}"></span>
+          <span th:text="${ride.departureTime.toLocalTime()}"></span>
+        </td>
+        <td th:text="${ride.destination}"></td>
+        <td th:text="${ride.availablePlaces}"></td>
+        <td th:text="${ride.pricePerSeat} + ' DT'"></td>
+        <td>
+                    <span th:classappend="${ride.status == 'in-progress'} ? 'status-in-progress' : 'status-over'"
+                          th:text="${ride.status}"></span>
+        </td>
+        <td style="text-align: center">
+          <a th:href="@{/rides/ride-details/{id}(id=${ride.id_ride})}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+              <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
+            </svg>
+          </a>
+        </td>
+
+        <td>
+          <!-- Edit Icon -->
+          <a th:href="@{/rides/manage/edit/{id}(id=${ride.id_ride})}" class="text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
+              <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001"/>
+            </svg>
+          </a>
+
+          <!-- Delete Icon -->
+          <a th:href="@{/rides/manage/delete/{id}(id=${ride.id_ride})}" class="text-danger">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+              <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+            </svg>
+          </a>
+          <button type="submit" class="btn btn-primary" th:action="@{/rides/manage/make-over}">Mark as over</button>
+        </td>
+
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
   <h2 class="text-center">Reservations on Your Rides</h2>
 
   <!-- Reservations Table (Styled Similar to Passenger's) -->

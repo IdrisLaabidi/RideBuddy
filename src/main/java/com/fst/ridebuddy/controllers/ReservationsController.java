@@ -2,9 +2,13 @@ package com.fst.ridebuddy.controllers;
 
 import com.fst.ridebuddy.entities.AppUser;
 import com.fst.ridebuddy.entities.Reservation;
+import com.fst.ridebuddy.entities.Ride;
 import com.fst.ridebuddy.models.ReservationDto;
+import com.fst.ridebuddy.models.RideDTO;
 import com.fst.ridebuddy.services.AppUserService;
 import com.fst.ridebuddy.services.ReservationsService;
+import com.fst.ridebuddy.services.RideMapper;
+import com.fst.ridebuddy.services.RideService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +22,8 @@ import java.util.List;
 @Controller
 @RequestMapping("/reservations")
 public class ReservationsController {
+    @Autowired
+    private RideService rideService;
 
     @Autowired
     private ReservationsService reservationsService;
@@ -56,6 +62,11 @@ public class ReservationsController {
             model.addAttribute("reservations", userReservations);
         }
 
+        // Fetch all rides from the database
+        List<Ride> allRides = rideService.getAllRides();
+
+        // Add the rides to the model to pass them to the Thymeleaf template
+        model.addAttribute("rides", allRides);
 
         return "manageReservations";
     }

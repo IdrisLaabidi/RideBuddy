@@ -212,4 +212,23 @@ public class RideController {
     }
 
 
+    @PostMapping("/manage/make-over/{id}")
+    public String updateState(@ModelAttribute("RideDTO") RideDTO rideDTO,
+                              Model model , @PathVariable Long id
+                              ) {
+        // Ensure authenticated user info is added to the model
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+        // Map RideDTO back to Ride entity
+        Ride existingRide = rideService.getRideById(id);
+        existingRide.setStatus("over");
+        rideService.updateRide(existingRide.getId_ride(), existingRide);
+        return "redirect:/reservations/manage";
+
+
+    }
+
+
 }

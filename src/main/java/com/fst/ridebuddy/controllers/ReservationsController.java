@@ -9,6 +9,7 @@ import com.fst.ridebuddy.services.AppUserService;
 import com.fst.ridebuddy.services.ReservationsService;
 import com.fst.ridebuddy.services.RideMapper;
 import com.fst.ridebuddy.services.RideService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -155,4 +156,25 @@ public class ReservationsController {
 
         return "redirect:/reservations/manage";
     }
+
+    @PostMapping("/accept/{id}")
+    public String updateStatus(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("reservationDto") Reservation reservation,
+            Model model) {
+        reservationsService.updateReservationStatus(id, "accepted");
+
+        Reservation res = reservationsService.getReservationById(id);
+        Long ride_id = res.getRide().getId_ride();
+        Ride existingRide = rideService.getRideById(ride_id);
+        Integer reservedPlaces = res.getReservedPlaces();
+        Integer availablePlaces = existingRide.getAvailablePlaces();
+        existingRide.setAvailablePlaces(availablePlaces - reservedPlaces);
+        rideService.updateRide(existingRide.getId_ride(), existingRide);
+
+        return "redirect:/reservations/manage";
+    }
+
+
+
 }

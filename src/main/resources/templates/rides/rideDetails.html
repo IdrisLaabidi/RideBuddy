@@ -16,7 +16,7 @@
 <body>
 <div th:replace="fragments/navbar :: navbar(user=${user})"></div>
 
-<div id="map"></div>
+<div id="map" ></div>
 <script th:inline="javascript">
     window.apiKey = /*[[${apiKey}]]*/ '';
     window.start = /*[[${start}]]*/ '';

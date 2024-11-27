@@ -99,7 +99,7 @@ public class RideController {
         model.addAttribute("end", ride.getEndCoordinate());
         model.addAttribute("apiKey", apiKey);
 
-        return "rides/rideDetails";
+        return "/rides/visualizeRide";
     }
     @GetMapping("/all-rides")
     public String getAllRides(Model model) {

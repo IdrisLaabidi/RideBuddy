@@ -4,12 +4,9 @@ import com.fst.ridebuddy.entities.AppUser;
 import com.fst.ridebuddy.entities.Reservation;
 import com.fst.ridebuddy.entities.Ride;
 import com.fst.ridebuddy.models.ReservationDto;
-import com.fst.ridebuddy.models.RideDTO;
 import com.fst.ridebuddy.services.AppUserService;
 import com.fst.ridebuddy.services.ReservationsService;
-import com.fst.ridebuddy.services.RideMapper;
 import com.fst.ridebuddy.services.RideService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -69,7 +66,7 @@ public class ReservationsController {
         // Add the rides to the model to pass them to the Thymeleaf template
         model.addAttribute("rides", allRides);
 
-        return "manageReservations";
+        return "/reservations/manageReservations";
     }
 
     // Create a new reservation
@@ -132,7 +129,7 @@ public class ReservationsController {
         model.addAttribute("reservationDto", reservationDto);
         model.addAttribute("reservationId", id);
 
-        return "updateReservation";
+        return "/reservations/updateReservation";
     }
 
     // Handle reservation update
@@ -144,7 +141,7 @@ public class ReservationsController {
             Model model) {
 
         if (result.hasErrors()) {
-            return "updateReservation";
+            return "reservations/updateReservation";
         }
 
         try {
@@ -160,8 +157,8 @@ public class ReservationsController {
     @PostMapping("/accept/{id}")
     public String updateStatus(
             @PathVariable Long id,
-            @Valid @ModelAttribute("reservationDto") Reservation reservation,
-            Model model) {
+            @Valid @ModelAttribute("reservationDto") Reservation reservation
+            ) {
         reservationsService.updateReservationStatus(id, "accepted");
 
         Reservation res = reservationsService.getReservationById(id);

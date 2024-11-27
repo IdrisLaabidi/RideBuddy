@@ -3,16 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RideBuddy | All Rides</title>
-  <link rel="icon" type="image/x-icon" href="/photos/rideBuddy-icon.ico">
+  <title>All Rides</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div th:replace="fragments/navbar :: navbar(user=${user})"></div>
+
 <div class="container py-5">
   <h2 class="text-center mb-4">Available Rides</h2>
-  <div th:replace="fragments/allRidesTable :: ridesTable (rides=${rides})"></div>
+
+  <!-- Reuse the allRidesTable.html fragment -->
+  <div th:replace="fragments/allRidesTableExtended :: ridesTable(rides=${rides}, userReservations=${userReservations})"></div>
+
+  <div class="text-center mt-4">
+    <a href="/reservations/manage" class="btn btn-secondary">Show My Reservations History</a>
+  </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

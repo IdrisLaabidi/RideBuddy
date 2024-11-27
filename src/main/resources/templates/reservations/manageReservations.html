@@ -8,61 +8,55 @@
 </head>
 <body>
 <div th:replace="fragments/navbar :: navbar(user=${user})"></div>
-<!-- Passenger Section -->
-<div th:if="${user.getRole() == 'PASSENGER'}" class="container py-5">
-  <h2 class="text-center">Manage Bookings</h2>
 
-  <!-- Reservation Creation Form -->
-  <form th:action="@{/reservations/create}" method="post" th:object="${reservationDto}" class="mb-5">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-    <div class="mb-3">
-      <label for="rideId" class="form-label">Ride ID</label>
-      <input type="number" id="rideId" th:field="${reservationDto.rideId}" class="form-control">
-    </div>
-    <div class="mb-3">
-      <label for="reservedPlaces" class="form-label">Reserved Places</label>
-      <input type="number" id="reservedPlaces" th:field="${reservationDto.reservedPlaces}" class="form-control">
-    </div>
-    <button type="submit" class="btn btn-primary">Create Reservation</button>
-  </form>
-
-  <!-- Success/Error Messages -->
-  <div th:if="${success}" class="alert alert-success" role="alert">
-    <span th:text="${success}"></span>
-  </div>
-  <div th:if="${error}" class="alert alert-danger" role="alert">
-    <span th:text="${error}"></span>
-  </div>
+<div class="container py-5" th:if="${user.getRole() == 'PASSENGER'}">
+  <h2 class="text-center mb-4">My Reservations History</h2>
 
   <!-- Reservations Table -->
-  <h3 class="mb-4">Your Reservations</h3>
   <table class="table table-striped">
     <thead>
     <tr>
-      <th>Ride ID</th>
-      <th>Reserved Places</th>
-      <th>Status</th>
-      <th>Actions</th>
+      <th>#</th>
+      <th>Departure Location</th>
+      <th>Destination</th>
+      <th>Departure Time</th>
+      <th>Ride Status</th>
+      <th>Update</th>
+      <th>Delete</th>
+      <th>Reservation Status</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="reservation : ${reservations}">
-      <td th:text="${reservation.ride.id_ride}"></td>
-      <td th:text="${reservation.reservedPlaces}"></td>
-      <td th:text="${reservation.status}"></td>
+    <tr th:each="reservation, iterStat : ${reservations}" th:classappend="${highlightRideId != null and highlightRideId == reservation.ride.id_ride} ? 'table-warning'">
+      <td th:text="${iterStat.index + 1}"></td>
+      <td th:text="${reservation.ride.departureLocation}"></td>
+      <td th:text="${reservation.ride.destination}"></td>
+      <td th:text="${reservation.ride.departureTime.toLocalDate() + ' ' + reservation.ride.departureTime.toLocalTime()}"></td>
+      <td th:text="${reservation.ride.status}"></td>
+      <td>
+        <form th:action="@{/reservations/update/{id}(id=${reservation.id_res})}" method="post" class="d-inline">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+          <div class="d-flex align-items-center gap-2">
+            <select name="reservedPlaces" class="form-select form-select-sm" required>
+              <option th:each="num : ${#numbers.sequence(1, reservation.ride.availablePlaces)}" th:value="${num}" th:text="${num}" th:selected="${num == reservation.getReservedPlaces()}"></option>
+            </select>
+            <button type="submit" class="btn btn-warning btn-sm">Update</button>
+          </div>
+        </form>
+      </td>
       <td>
         <form th:action="@{/reservations/delete/{id}(id=${reservation.id_res})}" method="post" class="d-inline">
           <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
           <button type="submit" class="btn btn-danger btn-sm">Delete</button>
         </form>
-        <a th:href="@{/reservations/update/{id}(id=${reservation.id_res})}" class="btn btn-warning btn-sm">Update</a>
       </td>
+      <td th:text="${reservation.status}"></td>
     </tr>
     </tbody>
   </table>
 </div>
 
-<!-- Conductor Section (Styled Similar to Passenger) -->
+<!-- Conductor Section -->
 <div th:if="${user.getRole() == 'CONDUCTOR'}" class="container py-5">
   <div class="container">
     <div class="dashboard-header text-center">
@@ -125,12 +119,7 @@
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <button type="submit" class="btn btn-primary btn-sm mt-2 mb-2">Mark as over</button>
           </form>
-
-
-
-
         </td>
-
       </tr>
       </tbody>
     </table>
@@ -155,7 +144,10 @@
     <tr th:each="reservation : ${reservations}">
       <td th:text="${reservation.ride.getDepartureLocation()}"></td>
       <td th:text="${reservation.ride.getDestination()}"></td>
-      <td th:text="${reservation.ride.getDepartureTime()}"></td>
+      <td>
+        <span th:text="${reservation.ride.departureTime.toLocalDate()}"></span>
+        <span th:text="${reservation.ride.departureTime.toLocalTime()}"></span>
+      </td>
       <td th:text="${reservation.user.first_name} + ' ' + ${reservation.user.last_name}"></td>
       <td th:text="${reservation.reservedPlaces}"></td>
       <td th:text="${reservation.status}"></td>

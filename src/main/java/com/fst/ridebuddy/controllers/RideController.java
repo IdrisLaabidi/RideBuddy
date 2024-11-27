@@ -2,6 +2,7 @@ package com.fst.ridebuddy.controllers;
 
 import com.fst.ridebuddy.entities.AppUser;
 import com.fst.ridebuddy.entities.Ride;
+import com.fst.ridebuddy.models.ReviewDto;
 import com.fst.ridebuddy.models.RideDTO;
 import com.fst.ridebuddy.services.AppUserService;
 import com.fst.ridebuddy.services.GeoCodingService;
@@ -13,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 
 @Controller
@@ -238,9 +240,16 @@ public class RideController {
         }
         Ride ride = rideService.getRideById(id);
         model.addAttribute("ride",ride);
-        //model.addAttribute("start", ride.getStartCoordinate());
-        //model.addAttribute("end", ride.getEndCoordinate());
         model.addAttribute("apiKey", apiKey);
+        if(Objects.equals(ride.getStatus(), "over")){
+            ReviewDto reviewDto = new ReviewDto();
+            reviewDto.setRideId(ride.getId_ride());
+            assert user != null;
+            reviewDto.setReviewerId(user.getId_user());
+            reviewDto.setReviewedId(ride.getConductor().getId_user());
+            System.out.println(reviewDto);
+            model.addAttribute("reviewDto", reviewDto );
+        }
 
         return "/rides/ridedetails";
     }

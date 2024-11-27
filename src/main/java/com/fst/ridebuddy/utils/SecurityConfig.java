@@ -10,7 +10,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
 import java.util.Arrays;
 
 @Configuration
@@ -20,26 +19,43 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS setup
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/").permitAll()
-                        .requestMatchers("/contact").permitAll()
-                        .requestMatchers("/rides/**").permitAll()
-                        .requestMatchers("/register").permitAll()
-                        .requestMatchers("/login").permitAll()
-                        .requestMatchers("/logout").permitAll()
-                        .requestMatchers("/ride-details/**").permitAll()
-                        .requestMatchers("/save-location").permitAll()
+                        // Routes accessible to everyone
+                        .requestMatchers("/", "/contact", "/register", "/login").permitAll()
+
+                        // Authenticated users
+                        .requestMatchers("/profile").authenticated()
+                        .requestMatchers("/reservations/manage").authenticated()
+
+                        // Routes for PASSENGER role
+                        .requestMatchers(
+                                "/reservations/update/{id}",
+                                "/rides/rides-near-me",
+                                "/rides/rides-near-me/{cords}",
+                                "/rides/ride-details/{id}",
+                                "/rides/all-rides"
+                        ).hasRole("PASSENGER")
+
+                        // Routes for CONDUCTOR role
+                        .requestMatchers(
+                                "/rides/create",
+                                "/rides/ride-visualize/{id}",
+                                "/rides/manage/edit/{id}",
+                                "/rides/manage/delete/{id}"
+                        ).hasRole("CONDUCTOR")
+
+                        // All other requests require authentication
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")  // Custom login page URL
-                        .defaultSuccessUrl("/", true)  // Redirect to home on successful login
-                        .permitAll()  // Allow everyone to access the login page
+                        .defaultSuccessUrl("/", true)
+                        .permitAll()
                 )
                 .logout(config -> config
-                        .logoutSuccessUrl("/")  // Redirect to home on logout
-                        .permitAll()  // Allow everyone to access the logout functionality
+                        .logoutSuccessUrl("/")
+                        .permitAll()
                 )
                 .build();
     }
@@ -47,13 +63,13 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080")); // Add allowed origins
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Add allowed HTTP methods
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type")); // Add allowed headers
-        configuration.setAllowCredentials(true); // Allow credentials (e.g., cookies)
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Apply CORS configuration to all endpoints
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
@@ -61,6 +77,5 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-
 }
+

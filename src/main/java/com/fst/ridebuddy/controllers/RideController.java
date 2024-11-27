@@ -88,8 +88,8 @@ public class RideController {
         return "redirect:/";
     }
 
-    @GetMapping("/ride-details/{id}")
-    public String rideDetail (Model model, @PathVariable Long id) {
+    @GetMapping("/ride-visualize/{id}")
+    public String visualizeRide (Model model, @PathVariable Long id) {
         AppUser user = appUserService.getAuthenticatedUser();
         if (user != null) {
             model.addAttribute("user", user);

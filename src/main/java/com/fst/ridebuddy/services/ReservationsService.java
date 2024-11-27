@@ -86,4 +86,8 @@ public class ReservationsService {
 
         return reservationsRepository.save(reservation);
     }
+
+    public boolean existsReservation(Long rideId, Long userId, String status) {
+        return reservationsRepository.existsReservation(rideId, userId, status);
+    }
 }

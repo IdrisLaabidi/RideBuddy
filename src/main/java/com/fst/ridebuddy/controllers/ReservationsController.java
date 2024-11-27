@@ -173,6 +173,19 @@ public class ReservationsController {
         return "redirect:/reservations/manage";
     }
 
+    @GetMapping("/create/{id}")
+    public String newReservation(Model model,@PathVariable Long id){
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+        Ride ride = rideService.getRideById(id);
+        model.addAttribute("ride",ride);
+        model.addAttribute("reservationDto", new ReservationDto());
+
+        return "reservations/createReservation";
+    }
+
 
 
 }

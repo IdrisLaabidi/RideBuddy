@@ -33,7 +33,7 @@
                 <div class="row mb-3">
                     <label class="col-sm-4 col-form-label">Ride ID *</label>
                     <div class="col-sm-8">
-                        <input class="form-control" type="number" th:field="${reservationDto.rideId}">
+                        <input class="form-control" type="number" th:field="${reservationDto.rideId}" th:value="${ride.getId_ride()}" disabled>
                         <p th:if="${#fields.hasErrors('rideId')}" th:errorclass="text-danger" th:errors="${reservationDto.rideId}"></p>
                     </div>
                 </div>

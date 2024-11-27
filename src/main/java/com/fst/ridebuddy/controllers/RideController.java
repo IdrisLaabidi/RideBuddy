@@ -249,6 +249,10 @@ public class RideController {
         Ride ride = rideService.getRideById(id);
         model.addAttribute("ride",ride);
         model.addAttribute("apiKey", apiKey);
+        if(Objects.equals(ride.getStatus(), "in-progress")){
+            boolean hasUserReserved = reservationsService.existsReservation(ride.getId_ride(), user.getId_user(), "PENDING");
+            model.addAttribute("hasUserReserved", hasUserReserved);
+        }
         if(Objects.equals(ride.getStatus(), "over")){
             ReviewDto reviewDto = new ReviewDto();
             reviewDto.setRideId(ride.getId_ride());

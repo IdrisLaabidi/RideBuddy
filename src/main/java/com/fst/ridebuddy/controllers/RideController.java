@@ -3,15 +3,13 @@ package com.fst.ridebuddy.controllers;
 import com.fst.ridebuddy.entities.AppUser;
 import com.fst.ridebuddy.entities.Ride;
 import com.fst.ridebuddy.models.RideDTO;
-import com.fst.ridebuddy.services.AppUserService;
-import com.fst.ridebuddy.services.GeoCodingService;
-import com.fst.ridebuddy.services.RideService;
-import com.fst.ridebuddy.services.RideMapper;
+import com.fst.ridebuddy.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -27,6 +25,9 @@ public class RideController {
 
     @Autowired
     private GeoCodingService geoCodingService;
+
+    @Autowired
+    private ReservationsService reservationsService;
 
     private final String apiKey = System.getenv("ORS_token");
 
@@ -106,15 +107,22 @@ public class RideController {
         AppUser user = appUserService.getAuthenticatedUser();
         if (user != null) {
             model.addAttribute("user", user);
-        }
-        // Fetch all rides from the database
-        List<Ride> allRides = rideService.getAllRides();
 
-        // Add the rides to the model to pass them to the Thymeleaf template
-        model.addAttribute("rides", allRides);
+            // Fetch all rides
+            List<Ride> allRides = rideService.getAllRides();
+            model.addAttribute("rides", allRides);
+
+            // Fetch user reservations (ride IDs only)
+            List<Long> userReservations = reservationsService.getReservationsByUser(user.getId_user())
+                    .stream()
+                    .map(reservation -> reservation.getRide().getId_ride())
+                    .toList();
+            model.addAttribute("userReservations", userReservations);
+        }
 
         return "rides/allRides"; // Return the view for displaying all rides
     }
+
 
     @GetMapping("/manage/edit/{id}")
     public String showEditRidePage(@PathVariable("id") Long id, Model model) {
@@ -165,7 +173,7 @@ public class RideController {
         rideService.updateRide(existingRide.getId_ride(), existingRide);
 
         // Redirect to home page after successful update
-        return "redirect:/rides/manage";
+        return "redirect:/reservations/manage";
     }
 
 
@@ -201,7 +209,7 @@ public class RideController {
         double lon = Double.parseDouble(cordsArray[1]);
         double [] userCords = {lat,lon};
         List<Ride> ridesSorted = rideService.getRidesSortedByProximity(userCords);
-        List<RideDTO> rides = new java.util.ArrayList<>(List.of());
+        List<RideDTO> rides = new ArrayList<>(List.of());
         for(Ride ride : ridesSorted){
             rides.add(RideMapper.toDTO(ride));
         }

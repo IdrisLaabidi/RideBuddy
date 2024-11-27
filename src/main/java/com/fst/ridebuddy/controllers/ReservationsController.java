@@ -40,6 +40,7 @@ public class ReservationsController {
         ReservationDto reservationDto = new ReservationDto();
         if (rideId != null) {
             reservationDto.setRideId(rideId); // Preselect the ride ID if provided
+            model.addAttribute("highlightRideId", rideId);
         }
         model.addAttribute("reservationDto", reservationDto);
 

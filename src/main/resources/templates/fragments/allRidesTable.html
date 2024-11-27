@@ -29,9 +29,8 @@
     <td th:text="${ride.conductor.first_name} + ' ' + ${ride.conductor.last_name}"></td>
     <td th:text="${ride.comments}"></td>
     <td>
-      <a th:href="@{/reservations/manage(rideId=${ride.id_ride})}" class="btn btn-primary btn-sm">Make a Reservation</a>
+      <!--<a th:href="@{/reservations/manage(rideId=${ride.id_ride})}" class="btn btn-primary btn-sm">Make a Reservation</a>-->
       <a th:href="@{/rides/ride-details/{id}(id=${ride.id_ride})}" class="btn btn-secondary btn-sm">Show Details</a>
-
     </td>
   </tr>
   </tbody>

@@ -230,5 +230,19 @@ public class RideController {
 
     }
 
+    @GetMapping("/ride-details/{id}")
+    public String rideDetails (Model model, @PathVariable Long id) {
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+        Ride ride = rideService.getRideById(id);
+        model.addAttribute("ride",ride);
+        //model.addAttribute("start", ride.getStartCoordinate());
+        //model.addAttribute("end", ride.getEndCoordinate());
+        model.addAttribute("apiKey", apiKey);
+
+        return "/rides/ridedetails";
+    }
 
 }

@@ -99,6 +99,8 @@ public class RideController {
             model.addAttribute("user", user);
         }
         Ride ride = rideService.getRideById(id);
+        List<AppUser> usersInRide = reservationsService.findUsersInRide(id) ;
+
         model.addAttribute("start", ride.getStartCoordinate());
         model.addAttribute("end", ride.getEndCoordinate());
         model.addAttribute("apiKey", apiKey);
@@ -230,8 +232,8 @@ public class RideController {
         // Update the ride in the database
         rideService.updateRide(existingRide.getId_ride(), existingRide);
 
-        // Redirect to home page after successful update
-        return "redirect:/reservations/manage";
+        // Redirect to my rides Page
+        return "redirect:/rides/myRides";
     }
 
 

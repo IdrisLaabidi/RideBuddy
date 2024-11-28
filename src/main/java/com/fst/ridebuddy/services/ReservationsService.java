@@ -82,7 +82,7 @@ public class ReservationsService {
         reservation.setRide(ride);
         reservation.setUser(user);
         reservation.setReservedPlaces(reservedPlaces);
-        reservation.setStatus("PENDING"); // Example status; can be adjusted based on business logic
+        reservation.setStatus("Pending"); // Example status; can be adjusted based on business logic
 
         return reservationsRepository.save(reservation);
     }

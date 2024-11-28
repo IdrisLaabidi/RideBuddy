@@ -64,7 +64,7 @@ public class RideService {
         double userLongitude = userLocation[1];
 
         // Fetch all rides and sort by distance
-        return rideRepository.findAll().stream()
+        return rideRepository.findAllByStatus("in-progress").stream()
                 .sorted(Comparator.comparingDouble(ride -> GeoUtils.calculateDistance(
                         userLatitude, userLongitude,
                         ride.parseCoordinates()[1],

@@ -22,6 +22,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS setup
                 .authorizeHttpRequests(auth -> auth
                         // Routes accessible to everyone
+                        .requestMatchers("/resources/**", "/static/**", "/photos/**").permitAll()
+
                         .requestMatchers("/", "/contact", "/register", "/login").permitAll()
 
                         // Authenticated users

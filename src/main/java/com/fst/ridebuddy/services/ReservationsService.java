@@ -73,9 +73,6 @@ public class ReservationsService {
         AppUser user = appUsersRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        // Deduct reserved places from the ride's available places
-        ride.setAvailablePlaces(ride.getAvailablePlaces() - reservedPlaces);
-        ridesRepository.save(ride);
 
         // Create and save the reservation
         Reservation reservation = new Reservation();
@@ -89,5 +86,9 @@ public class ReservationsService {
 
     public boolean existsReservation(Long rideId, Long userId, String status) {
         return reservationsRepository.existsReservation(rideId, userId, status);
+    }
+
+    public List<AppUser> findUsersInRide(Long rideId){
+        return reservationsRepository.findUsersInRide(rideId);
     }
 }

@@ -88,7 +88,7 @@ public class RideController {
 
         // Save the ride using the service
         rideService.createRide(ride);
-        return "redirect:/";
+        return "redirect:/rides/myRides";
     }
 
     @GetMapping("/ride-visualize/{id}")
@@ -98,6 +98,8 @@ public class RideController {
             model.addAttribute("user", user);
         }
         Ride ride = rideService.getRideById(id);
+        List<AppUser> usersInRide = reservationsService.findUsersInRide(id) ;
+
         model.addAttribute("start", ride.getStartCoordinate());
         model.addAttribute("end", ride.getEndCoordinate());
         model.addAttribute("apiKey", apiKey);
@@ -190,8 +192,8 @@ public class RideController {
         // Update the ride in the database
         rideService.updateRide(existingRide.getId_ride(), existingRide);
 
-        // Redirect to home page after successful update
-        return "redirect:/reservations/manage";
+        // Redirect to my rides Page
+        return "redirect:/rides/myRides";
     }
 
 
@@ -202,7 +204,7 @@ public class RideController {
             model.addAttribute("user", user);
         }
         rideService.deleteRide(id);
-        return "redirect:/rides/manage";
+        return "redirect:/rides/myRides";
     }
 
     @GetMapping("/rides-near-me")
@@ -251,7 +253,7 @@ public class RideController {
         Ride existingRide = rideService.getRideById(id);
         existingRide.setStatus("over");
         rideService.updateRide(existingRide.getId_ride(), existingRide);
-        return "redirect:/reservations/manage";
+        return "redirect:/rides/myRides";
 
 
     }

@@ -1,6 +1,8 @@
 package com.fst.ridebuddy.entities;
 
 import jakarta.persistence.*;
+
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -133,5 +135,23 @@ public class AppUser {
 
     public void setRides(List<Ride> rides) {
         this.rides = rides;
+    }
+
+    @Override
+    public String toString() {
+        return "AppUser{" +
+                "id_user=" + id_user +
+                ", first_name='" + first_name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                ", email='" + email + '\'' +
+                ", role='" + role + '\'' +
+                ", average_rating=" + average_rating +
+                ", password='" + password + '\'' +
+                ", profilePic=" + Arrays.toString(profilePic) +
+                ", reservations=" + reservations +
+                ", reviewsGiven=" + reviewsGiven +
+                ", reviewsReceived=" + reviewsReceived +
+                ", rides=" + rides +
+                '}';
     }
 }

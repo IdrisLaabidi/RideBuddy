@@ -34,6 +34,7 @@ public class ReviewService {
 
         if(Objects.equals(review.getReviewer().getRole(), "CONDUCTOR")) {
             isReviewedInRide = reservationRepository.existsReservation(rideId, reviewedId, acceptedStatus);
+            System.out.println(reviewedId);
             isReviewerInRide = Objects.equals(review.getReviewer().getId_user(), review.getRide().getConductor().getId_user());
         }
         System.out.println(isReviewerInRide);

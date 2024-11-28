@@ -10,7 +10,7 @@
 <div th:replace="fragments/navbar :: navbar(user=${user})"></div>
 
 <div th:if="${user.getRole() == 'PASSENGER'}" class="container py-5">
-  <h2 class="text-center mb-4">Available Rides</h2>
+  <h2 class="text-center mb-4">All Rides</h2>
 
   <!-- Reuse the allRidesTable.html fragment -->
   <div th:replace="fragments/allRidesTableExtended :: ridesTable(rides=${rides}, userReservations=${userReservations})"></div>

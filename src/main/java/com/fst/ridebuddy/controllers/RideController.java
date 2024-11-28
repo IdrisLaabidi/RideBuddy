@@ -311,7 +311,8 @@ public class RideController {
             boolean hasUserReserved = reservationsService.existsReservation(ride.getId_ride(), user.getId_user(), "PENDING");
             model.addAttribute("hasUserReserved", hasUserReserved);
         }
-        if(Objects.equals(ride.getStatus(), "over")){
+        if(Objects.equals(ride.getStatus(), "over") && reservationsService.existsReservation(ride.getId_ride(), user.getId_user(), "ACCEPTED")){
+            model.addAttribute("userCanRate", true);
             ReviewDto reviewDto = new ReviewDto();
             reviewDto.setRideId(ride.getId_ride());
             assert user != null;

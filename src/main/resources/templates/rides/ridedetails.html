@@ -55,7 +55,7 @@
         Make Reservation</a>
 </div>
 <div
-        th:if="${ride.status.equals('over')}"
+        th:if="${userCanRate}"
         class="container my-5">
     <h3>Rate the Driver</h3>
     <form th:action="@{/reviews/rate}" th:object="${reviewDto}" method="post">

@@ -36,7 +36,7 @@
         </div>
         <div th:if="${!#lists.contains(userReservations, ride.id_ride)}">
 
-          <form th:id="'reservationForm-' + ${ride.id_ride}" th:action="@{/reservations/create}" method="post" class="mt-2">
+          <form th:id="'reservationForm-' + ${ride.id_ride}" th:action="@{/reservations/create}" method="post" class="mt-2" th:if="${ride.getStatus() == 'in-progress'}">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <input type="hidden" name="rideId" th:value="${ride.id_ride}" />
             <div class="d-flex gap-1">

@@ -1,7 +1,6 @@
 package com.fst.ridebuddy.entities;
 
 import jakarta.persistence.*;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,10 +13,9 @@ public class AppUser {
 
     private String first_name;
     private String last_name;
-    @Column(unique = true , nullable = false)
+    @Column(unique = true, nullable = false)
     private String email;
     private String role;
-    private Double average_rating;
     private String password;
 
     @Lob
@@ -89,14 +87,6 @@ public class AppUser {
         this.role = role;
     }
 
-    public Double getAverage_rating() {
-        return average_rating;
-    }
-
-    public void setAverage_rating(Double average_rating) {
-        this.average_rating = average_rating;
-    }
-
     public byte[] getProfilePic() {
         return profilePic;
     }
@@ -137,6 +127,16 @@ public class AppUser {
         this.rides = rides;
     }
 
+    public float getAverage_rating() {
+        if (reviewsReceived == null || reviewsReceived.isEmpty()) {
+            return 0.0f;
+        }
+        return (float) reviewsReceived.stream()
+                .mapToDouble(Review::getRating)
+                .average()
+                .orElse(0.0);
+    }
+
     @Override
     public String toString() {
         return "AppUser{" +
@@ -145,7 +145,7 @@ public class AppUser {
                 ", last_name='" + last_name + '\'' +
                 ", email='" + email + '\'' +
                 ", role='" + role + '\'' +
-                ", average_rating=" + average_rating +
+                ", average_rating=" + getAverage_rating() +
                 ", password='" + password + '\'' +
                 ", profilePic=" + Arrays.toString(profilePic) +
                 ", reservations=" + reservations +

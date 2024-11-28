@@ -101,6 +101,7 @@ public class RideController {
         Ride ride = rideService.getRideById(id);
         List<AppUser> usersInRide = reservationsService.findUsersInRide(id) ;
 
+        model.addAttribute("usersInRide", usersInRide);
         model.addAttribute("start", ride.getStartCoordinate());
         model.addAttribute("end", ride.getEndCoordinate());
         model.addAttribute("apiKey", apiKey);

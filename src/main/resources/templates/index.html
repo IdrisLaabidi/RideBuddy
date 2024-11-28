@@ -25,13 +25,12 @@
 
     <!-- When a user is logged in -->
     <div sec:authorize="isAuthenticated()">
-        <h2 class="text-center">Dashboard</h2>
+
 
         <!-- Features for Conductors -->
         <div sec:authorize="hasRole('CONDUCTOR')">
-            <p class="text-center">Here’s what you can do with RideBuddy as a <b>Conductor</b>:</p>
-            <div class="row g-4">
-                <div class="col-md-6">
+            <div class="row g-5">
+                <div class="col-md-4">
                     <div class="card shadow-sm">
                         <img src="https://placehold.co/400x200" class="card-img-top" alt="Offer a Ride">
                         <div class="card-body">
@@ -41,13 +40,24 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <img src="https://placehold.co/400x200" class="card-img-top" alt="Rides Management Dashboard">
+                        <div class="card-body">
+                            <h5 class="card-title">Rides Management Dashboard</h5>
+                            <p class="card-text">Easily view, update, and organize your created rides in one place.</p>
+                            <a href="/rides/myRides" class="btn btn-primary">Go to Rides Dashboard</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
                     <div class="card shadow-sm">
                         <img src="https://placehold.co/400x200" class="card-img-top" alt="Manage Reservations">
                         <div class="card-body">
                             <h5 class="card-title">Manage Reservations</h5>
                             <p class="card-text">View and manage passenger reservations for your rides.</p>
-                            <a href="/reservations/manage" class="btn btn-primary">Manage Reservations</a>
+                            <a href="/reservations/manage/passengerReservations" class="btn btn-primary">Manage Passenger Reservations for your Rides</a>
                         </div>
                     </div>
                 </div>
@@ -56,7 +66,6 @@
 
         <!-- Features for Passengers -->
         <div sec:authorize="hasRole('PASSENGER')">
-            <p class="text-center">Here’s what you can do with RideBuddy as a <b>Passenger</b>:</p>
             <div class="row g-4">
                 <div class="col-md-6">
                     <div class="card shadow-sm">

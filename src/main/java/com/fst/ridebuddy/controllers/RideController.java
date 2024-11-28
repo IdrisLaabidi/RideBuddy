@@ -104,6 +104,22 @@ public class RideController {
 
         return "/rides/visualizeRide";
     }
+
+    @GetMapping("/myRides")
+    public String getMyRides(Model model) {
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+        // Fetch all rides from the database
+        List<Ride> allRides = rideService.getAllRidesByUserId(user.getId_user());
+
+        // Add the rides to the model to pass them to the Thymeleaf template
+        model.addAttribute("rides", allRides);
+
+        return "rides/allRides";
+    }
+
     @GetMapping("/all-rides")
     public String getAllRides(Model model) {
         AppUser user = appUserService.getAuthenticatedUser();

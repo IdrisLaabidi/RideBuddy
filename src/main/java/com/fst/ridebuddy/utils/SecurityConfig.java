@@ -31,6 +31,9 @@ public class SecurityConfig {
                         // Routes for PASSENGER role
                         .requestMatchers(
                                 "/reservations/update/{id}",
+                                "/reservations/create",
+                                "/reservations/create/{id}",
+                                "/reservations/delete/{id}",
                                 "/rides/rides-near-me",
                                 "/rides/rides-near-me/{cords}",
                                 "/rides/ride-details/{id}",
@@ -42,7 +45,12 @@ public class SecurityConfig {
                                 "/rides/create",
                                 "/rides/ride-visualize/{id}",
                                 "/rides/manage/edit/{id}",
-                                "/rides/manage/delete/{id}"
+                                "/rides/manage/delete/{id}",
+                                "/rides/myRides",
+                                "rides/manage/make-over/",
+                                "/reservations/manage/passengerReservations",
+                                "/reservations/accept/{id}",
+                                "/reservations/status/{id}"
                         ).hasRole("CONDUCTOR")
 
                         // All other requests require authentication

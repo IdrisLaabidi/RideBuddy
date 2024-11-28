@@ -24,13 +24,15 @@
   </style>
 </head>
 <body>
+<div th:replace="fragments/navbar :: navbar(user=${user})"></div>
 <div class="container">
-  <div th:replace="fragments/navbar :: navbar(user=${user})"></div>
+
   <h2 class="text-center mb-4">Edit Ride Offer</h2>
 
   <!-- Form to edit a ride -->
-  <form id="rideForm" th:action="@{/rides/manage/edit}" th:object="${RideDTO}" method="post">
-    <!-- Hidden input for Ride ID -->
+  <form id="rideForm" th:action="@{/rides/manage/edit/{id}(id=${RideDTO.id_ride})}" th:object="${RideDTO}" method="post">
+
+  <!-- Hidden input for Ride ID -->
     <input type="hidden" th:field="*{id_ride}" />
     <div class="form-group">
       <label for="departureLocation">Departure Location</label>

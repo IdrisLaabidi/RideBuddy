@@ -31,9 +31,14 @@ public class RideService {
                 .orElseThrow(() -> new IllegalArgumentException("Ride not found with id: " + id));
     }
 
+    public List<Ride> getAllRidesByUserId(Long userId) {
+        return rideRepository.findAllByConductor_Id(userId);
+    }
+
     public List<Ride> getAllRides() {
         return rideRepository.findAll();
     }
+
 
     @Transactional
     public Ride updateRide(Long id, Ride updatedRide) {

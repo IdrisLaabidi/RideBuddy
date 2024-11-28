@@ -50,8 +50,8 @@
         Update Reservation</a>
     <a
             th:if="${!ride.status.equals('over') && !hasUserReserved}"
-            th:href="@{/reservations/create/{id}(id=${ride.id_ride})}"
-            class="btn btn-primary btn-sm" th:text="${hasUserReserved}">
+            th:href="@{/rides/all-rides(rideId=${ride.id_ride})}"
+            class="btn btn-primary btn-sm">
         Make Reservation</a>
 </div>
 <div

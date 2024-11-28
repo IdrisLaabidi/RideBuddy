@@ -221,6 +221,4 @@ public class ReservationsController {
         return "reservations/createReservation";
     }
 
-
-
 }

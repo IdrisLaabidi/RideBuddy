@@ -2,7 +2,78 @@
 <html lang="en">
 <body>
 <div th:fragment="ridesTable (rides)">
-<table class="table table-bordered table-striped">
+  <span class="filter-btn text-primary" style="cursor: pointer" onclick="document.getElementById('filterUI').style.display = document.getElementById('filterUI').style.display === 'none' || !document.getElementById('filterUI').style.display ? 'block' : 'none';">
+    🔍 Filter
+  </span>
+  <div class="filter-ui" id="filterUI" style="display: none;">
+    <div class="mb-3">
+      <label for="columnSelect" class="form-label">Choose Column:</label>
+      <select id="columnSelect" class="form-select" onchange="
+      const columnSelect = document.getElementById('columnSelect').value;
+      const table = document.getElementById('ridesTable');
+      const rows = table.querySelectorAll('tbody tr');
+      const valueSet = new Set();
+      const valueSelect = document.getElementById('valueSelect');
+      valueSelect.innerHTML = `<option value=''>-- Select Value --</option>`;
+
+      // Ensure a column is selected before proceeding
+      if (columnSelect) {
+      rows.forEach(row => {
+      const cell = row.querySelector(`td:nth-child(${columnSelect})`);
+      if (cell) {
+      valueSet.add(cell.textContent.trim());
+      }
+      });
+      valueSet.forEach(value => {
+      const option = document.createElement('option');
+      option.value = value;
+      option.textContent = value;
+      valueSelect.appendChild(option);
+      });
+      }
+">
+        <option value="">-- Select Column --</option>
+        <option value="2">Departure Location</option>
+        <option value="3">Destination</option>
+        <option value="4">Departure Time</option>
+        <option value="5">Available Places</option>
+        <option value="6">Price per Seat</option>
+        <option value="7">Status</option>
+        <option value="8">Conductor</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="valueSelect" class="form-label">Choose Value:</label>
+      <select id="valueSelect" class="form-select">
+        <option value="">-- Select Value --</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" onclick="
+    const columnSelect = document.getElementById('columnSelect').value;
+    const valueSelect = document.getElementById('valueSelect').value;
+    const table = document.getElementById('ridesTable');
+    const rows = table.querySelectorAll('tbody tr');
+
+    if (columnSelect && valueSelect) {
+    rows.forEach(row => {
+    const cell = row.querySelector(`td:nth-child(${columnSelect})`);
+    if (cell && cell.textContent.trim() === valueSelect) {
+    row.style.display = '';
+    } else {
+    row.style.display = 'none';
+    }
+    });
+    }
+">Apply Filter</button>
+    <button class="btn btn-secondary" onclick="
+    const rows = document.getElementById('ridesTable').querySelectorAll('tbody tr');
+    rows.forEach(row => (row.style.display = ''));
+    document.getElementById('columnSelect').value = '';
+    document.getElementById('valueSelect').innerHTML = `<option value=''>-- Select Value --</option>`;
+">Reset</button>
+  </div>
+
+<table id="ridesTable" class="table table-bordered table-striped">
   <thead>
   <tr>
     <th>#</th>

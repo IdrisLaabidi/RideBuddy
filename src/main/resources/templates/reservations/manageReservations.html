@@ -86,7 +86,7 @@
       <td th:text="${reservation.reservedPlaces}"></td>
       <td th:text="${reservation.status}"></td>
       <td>
-        <div style="display: flex; justify-content: space-around;">
+        <div style="display: flex; justify-content: space-around;" th:if="${reservation.ride.getStatus() == 'in-progress' and (reservation.getStatus() == 'PENDING' or reservation.getStatus() == 'ACCEPTED')}">
           <form th:action="@{/reservations/accept/{id}(id=${reservation.getId_res()})}" method="post"
                 th:if="${reservation.status != 'ACCEPTED' and reservation.status != 'REJECTED'}">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />

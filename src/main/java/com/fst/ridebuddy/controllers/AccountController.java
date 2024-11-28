@@ -28,6 +28,11 @@ public class AccountController {
     private AppUserService userService;
     private static final long MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
 
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
+
     @GetMapping("/register")
     public String register(Model model) {
         RegisterDto registerDto = new RegisterDto();

@@ -82,8 +82,12 @@ public class ReservationsService {
         reservation.setRide(ride);
         reservation.setUser(user);
         reservation.setReservedPlaces(reservedPlaces);
-        reservation.setStatus("Pending"); // Example status; can be adjusted based on business logic
+        reservation.setStatus("PENDING"); // Example status; can be adjusted based on business logic
 
         return reservationsRepository.save(reservation);
+    }
+
+    public boolean existsReservation(Long rideId, Long userId, String status) {
+        return reservationsRepository.existsReservation(rideId, userId, status);
     }
 }

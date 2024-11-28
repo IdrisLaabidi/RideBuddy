@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 
 @Entity
 public class Review {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_rev;
+
+    @EmbeddedId
+    private ReviewId id; // Composite key
 
     private Integer rating;
     private String comment;
@@ -16,25 +16,27 @@ public class Review {
     private Integer behaviour;
 
     @ManyToOne
+    @MapsId("reviewerId")
     @JoinColumn(name = "reviewer_id")
     private AppUser reviewer;
 
     @ManyToOne
+    @MapsId("reviewedId")
     @JoinColumn(name = "reviewed_id")
     private AppUser reviewed;
 
     @ManyToOne
+    @MapsId("rideId")
     @JoinColumn(name = "ride_id")
     private Ride ride;
 
     // Getters and Setters
-
-    public Long getId_rev() {
-        return id_rev;
+    public ReviewId getId() {
+        return id;
     }
 
-    public void setId_rev(Long id_rev) {
-        this.id_rev = id_rev;
+    public void setId(ReviewId id) {
+        this.id = id;
     }
 
     public Integer getRating() {
@@ -109,4 +111,3 @@ public class Review {
         this.ride = ride;
     }
 }
-

@@ -2,6 +2,7 @@ package com.fst.ridebuddy.controllers;
 
 import com.fst.ridebuddy.entities.AppUser;
 import com.fst.ridebuddy.entities.Ride;
+import com.fst.ridebuddy.models.ReviewDto;
 import com.fst.ridebuddy.models.RideDTO;
 import com.fst.ridebuddy.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @Controller
@@ -102,6 +104,22 @@ public class RideController {
 
         return "/rides/visualizeRide";
     }
+
+    @GetMapping("/myRides")
+    public String getMyRides(Model model) {
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+        // Fetch all rides from the database
+        List<Ride> allRides = rideService.getAllRidesByUserId(user.getId_user());
+
+        // Add the rides to the model to pass them to the Thymeleaf template
+        model.addAttribute("rides", allRides);
+
+        return "rides/allRides";
+    }
+
     @GetMapping("/all-rides")
     public String getAllRides(Model model) {
         AppUser user = appUserService.getAuthenticatedUser();
@@ -246,9 +264,20 @@ public class RideController {
         }
         Ride ride = rideService.getRideById(id);
         model.addAttribute("ride",ride);
-        //model.addAttribute("start", ride.getStartCoordinate());
-        //model.addAttribute("end", ride.getEndCoordinate());
         model.addAttribute("apiKey", apiKey);
+        if(Objects.equals(ride.getStatus(), "in-progress")){
+            boolean hasUserReserved = reservationsService.existsReservation(ride.getId_ride(), user.getId_user(), "PENDING");
+            model.addAttribute("hasUserReserved", hasUserReserved);
+        }
+        if(Objects.equals(ride.getStatus(), "over")){
+            ReviewDto reviewDto = new ReviewDto();
+            reviewDto.setRideId(ride.getId_ride());
+            assert user != null;
+            reviewDto.setReviewerId(user.getId_user());
+            reviewDto.setReviewedId(ride.getConductor().getId_user());
+            System.out.println(reviewDto);
+            model.addAttribute("reviewDto", reviewDto );
+        }
 
         return "/rides/ridedetails";
     }

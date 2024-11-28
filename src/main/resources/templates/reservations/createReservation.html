@@ -27,13 +27,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
 
-            <form method="post" th:object="${reservationDto}">
+            <form method="post" th:object="${reservationDto}" th:action="@{/reservations/create/{id}(id=${reservationDto.getRideId()})}">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
                 <div class="row mb-3">
                     <label class="col-sm-4 col-form-label">Ride ID *</label>
                     <div class="col-sm-8">
-                        <input class="form-control" type="number" th:field="${reservationDto.rideId}">
+                        <input class="form-control" type="number" th:field="${reservationDto.rideId}" th:value="${ride.getId_ride()}" disabled>
                         <p th:if="${#fields.hasErrors('rideId')}" th:errorclass="text-danger" th:errors="${reservationDto.rideId}"></p>
                     </div>
                 </div>

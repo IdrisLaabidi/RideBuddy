@@ -23,6 +23,9 @@ public class ReservationsService {
     @Autowired
     private AppUsersRepository appUsersRepository;
 
+    @Autowired
+    private RideService rideService;
+
     // Fetch reservations by user ID
     public List<Reservation> getReservationsByUser(Long userId) {
         return reservationsRepository.findAll().stream()
@@ -42,7 +45,20 @@ public class ReservationsService {
 
     // Cancel a reservation
     public void cancelReservation(Long id) {
-        reservationsRepository.deleteById(id);
+
+        Reservation reservation = getReservationById(id);
+        reservation.setStatus("CANCELED");
+
+        Long ride_id = reservation.getRide().getId_ride();
+
+        Ride existingRide = rideService.getRideById(ride_id);
+        Integer reservedPlaces = reservation.getReservedPlaces();
+        Integer availablePlaces = existingRide.getAvailablePlaces();
+        existingRide.setAvailablePlaces(availablePlaces + reservedPlaces);
+        rideService.updateRide(existingRide.getId_ride(), existingRide);
+
+        ridesRepository.save(existingRide);
+        reservationsRepository.save(reservation);
     }
 
     // Update a reservation
@@ -73,17 +89,17 @@ public class ReservationsService {
         AppUser user = appUsersRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        // Deduct reserved places from the ride's available places
-        ride.setAvailablePlaces(ride.getAvailablePlaces() - reservedPlaces);
-        ridesRepository.save(ride);
-
         // Create and save the reservation
         Reservation reservation = new Reservation();
         reservation.setRide(ride);
         reservation.setUser(user);
         reservation.setReservedPlaces(reservedPlaces);
-        reservation.setStatus("Pending"); // Example status; can be adjusted based on business logic
+        reservation.setStatus("PENDING"); // Example status; can be adjusted based on business logic
 
         return reservationsRepository.save(reservation);
+    }
+
+    public boolean existsReservation(Long rideId, Long userId, String status) {
+        return reservationsRepository.existsReservation(rideId, userId, status);
     }
 }

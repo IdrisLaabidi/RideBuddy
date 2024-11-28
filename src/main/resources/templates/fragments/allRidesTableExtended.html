@@ -19,7 +19,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="ride, iterStat : ${rides}">
+    <tr th:each="ride, iterStat : ${rides}" th:classappend="${highlightRideId != null and highlightRideId == ride.getId_ride()} ? 'table-warning'">
       <td th:text="${iterStat.index + 1}"></td>
       <td th:text="${ride.departureLocation}"></td>
       <td th:text="${ride.destination}"></td>

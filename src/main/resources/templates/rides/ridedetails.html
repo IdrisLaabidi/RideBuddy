@@ -43,7 +43,76 @@
             <div id="map"></div>
         </div>
     </div>
-    <a th:href="@{/reservations/manage(rideId=${ride.id_ride})}" class="btn btn-primary btn-sm">Make a Reservation</a>
+    <a
+            th:if="${!ride.status.equals('over') && hasUserReserved}"
+            th:href="@{/reservations/manage(rideId=${ride.id_ride})}"
+            class="btn btn-primary btn-sm">
+        Update Reservation</a>
+    <a
+            th:if="${!ride.status.equals('over') && !hasUserReserved}"
+            th:href="@{/rides/all-rides(rideId=${ride.id_ride})}"
+            class="btn btn-primary btn-sm">
+        Make Reservation</a>
+</div>
+<div
+        th:if="${ride.status.equals('over')}"
+        class="container my-5">
+    <h3>Rate the Driver</h3>
+    <form th:action="@{/reviews/rate}" th:object="${reviewDto}" method="post">
+        <input type="hidden" name="rideId" th:value="${ride.getId_ride()}" th:field="*{rideId}"/>
+        <input type="hidden" name="reviewerId" th:value="${user.getId_user()}" th:field="*{reviewerId}"/>
+        <input type="hidden" name="driverId" th:value="${ride.getConductor().getId_user()}" th:field="*{reviewedId}"/>
+        <div th:if="${user.role.equals('PASSENGER')}">
+            <table>
+                <tr>
+                       <td><label>Punctuality</label></td>
+                        <td>
+                            <select th:field="*{punctuality}">
+                                <option value="1">✮</option>
+                                <option value="2">✮✮</option>
+                                <option value="3">✮✮✮</option>
+                                <option value="4">✮✮✮✮</option>
+                                <option value="5">✮✮✮✮✮</option>
+                            </select>
+                        </td>
+                </tr>
+                <tr>
+                    <td><label>Driving</label></td>
+                    <td>
+                        <select th:field="*{driving}">
+                            <option value="1">✮</option>
+                            <option value="2">✮✮</option>
+                            <option value="3">✮✮✮</option>
+                            <option value="4">✮✮✮✮</option>
+                            <option value="5">✮✮✮✮✮</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label>Friendliness</label></td>
+                    <td>
+                        <select th:field="*{friendliness}">
+                            <option value="1">✮</option>
+                            <option value="2">✮✮</option>
+                            <option value="3">✮✮✮</option>
+                            <option value="4">✮✮✮✮</option>
+                            <option value="5">✮✮✮✮✮</option>
+                        </select>
+                    </td>
+                </tr>
+
+            </table>
+            <div class="form-group">
+                <label for="comment">Leave a comment:</label>
+                <textarea class="form-control" id="comment" name="comment" rows="3" placeholder="Write your feedback here..." th:field="*{comment}"></textarea>
+            </div>
+        </div>
+        <div th:if="${user.role.equals('CONDUCTOR')}">
+            rate the users
+        </div>
+
+        <button type="submit" class="btn btn-success mt-3">Submit Rating</button>
+    </form>
 </div>
 
 <script th:inline="javascript">
@@ -51,7 +120,6 @@
     window.start = /*[[${ride.startCoordinate}]]*/ '';
     window.end = /*[[${ride.endCoordinate}]]*/ '';
 </script>
-
 <script src="/js/map.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

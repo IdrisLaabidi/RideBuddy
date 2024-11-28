@@ -107,6 +107,23 @@ public class ReservationsController {
         return "redirect:/reservations/manage";
     }
 
+    @GetMapping("/manage/passengerReservations")
+    public String managePassengerReservations(
+            @RequestParam(value = "rideId", required = false) Long rideId, Model model) {
+        // Fetch the authenticated user
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user == null) {
+            throw new IllegalStateException("No authenticated user found.");
+        }
+
+        model.addAttribute("user", user);
+
+        // Fetch reservations for rides conducted by the authenticated user
+        List<Reservation> userReservations = reservationsService.getReservationsByConductor(user.getId_user());
+        model.addAttribute("reservations", userReservations);
+
+        return "reservations/manageReservations";
+    }
 
     // Delete a reservation
     @PostMapping("/delete/{id}")
@@ -156,11 +173,11 @@ public class ReservationsController {
     }
 
     @PostMapping("/accept/{id}")
-    public String updateStatus(
+    public String updateStatusToAccepted(
             @PathVariable Long id,
             @Valid @ModelAttribute("reservationDto") Reservation reservation
             ) {
-        reservationsService.updateReservationStatus(id, "accepted");
+        reservationsService.updateReservationStatus(id, "ACCEPTED");
 
         Reservation res = reservationsService.getReservationById(id);
         Long ride_id = res.getRide().getId_ride();
@@ -173,6 +190,35 @@ public class ReservationsController {
         return "redirect:/reservations/manage";
     }
 
+    @PostMapping("/status/{id}")
+    public String updateStatus(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("reservationDto") Reservation reservation
+    ) {
+        reservationsService.updateReservationStatus(id, "REJECTED");
 
+        Reservation res = reservationsService.getReservationById(id);
+        Long ride_id = res.getRide().getId_ride();
+        Ride existingRide = rideService.getRideById(ride_id);
+        Integer reservedPlaces = res.getReservedPlaces();
+        Integer availablePlaces = existingRide.getAvailablePlaces();
+        existingRide.setAvailablePlaces(availablePlaces - reservedPlaces);
+        rideService.updateRide(existingRide.getId_ride(), existingRide);
+
+        return "redirect:/reservations/manage";
+    }
+
+    @GetMapping("/create/{id}")
+    public String newReservation(Model model,@PathVariable Long id){
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+        Ride ride = rideService.getRideById(id);
+        model.addAttribute("ride",ride);
+        model.addAttribute("reservationDto", new ReservationDto());
+
+        return "reservations/createReservation";
+    }
 
 }

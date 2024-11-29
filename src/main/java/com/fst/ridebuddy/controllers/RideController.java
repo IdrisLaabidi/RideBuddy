@@ -54,20 +54,37 @@ public class RideController {
         }
 
         LocalDateTime combinedDepartureTime = LocalDateTime.of(rideDTO.getDepartureDate(), rideDTO.getDepartureTime());
-
         combinedDepartureTime = combinedDepartureTime.plusHours(1);
 
+        // If coordinates are provided, deduce locations using OpenRouteService API
+        String departureLocation = rideDTO.getDepartureLocation();
+        String destinationLocation = rideDTO.getDestination();
+        String startCords = rideDTO.getStartCoordinate();
+        String endCords = rideDTO.getEndCoordinate();
 
+        String departure = "";
+        String destination = "";
 
-        String startCords = geoCodingService.getCoordinates(rideDTO.getDepartureLocation()+','+rideDTO.getStatGov()+",Tunisia");
-        String endCords = geoCodingService.getCoordinates(rideDTO.getDestination()+','+rideDTO.getEndGov()+",Tunisia");
-
+        if (rideDTO.getStartCoordinate() != null && rideDTO.getEndCoordinate() != null) {
+            // Use OpenRouteService API to get addresses for coordinates
+            departure = geoCodingService.getAddressFromCoordinates(rideDTO.getStartCoordinate());
+            String [] departureArray = departure.split(",");
+            departureLocation = departureArray[0] ;
+            rideDTO.setStatGov( departureArray[1] );
+            destination = geoCodingService.getAddressFromCoordinates(rideDTO.getEndCoordinate());
+            String [] destinationArray = destination.split(",");
+            destinationLocation = destinationArray[0] ;
+            rideDTO.setEndGov( destinationArray[1] );
+        }else{
+            startCords = geoCodingService.getCoordinates(rideDTO.getDepartureLocation()+','+rideDTO.getStatGov()+",Tunisia");
+            endCords = geoCodingService.getCoordinates(rideDTO.getDestination()+','+rideDTO.getEndGov()+",Tunisia");
+        }
 
         // Create a new Ride entity and set its fields
         Ride ride = new Ride();
-        ride.setDepartureLocation(rideDTO.getDepartureLocation());
-        ride.setDepartureTime(combinedDepartureTime); // Set combined departureTime
-        ride.setDestination(rideDTO.getDestination());
+        ride.setDepartureLocation(departureLocation);
+        ride.setDepartureTime(combinedDepartureTime);
+        ride.setDestination(destinationLocation);
         ride.setAvailablePlaces(rideDTO.getAvailablePlaces());
         ride.setPricePerSeat(rideDTO.getPricePerSeat());
         ride.setStatus("in-progress"); // default status
@@ -76,21 +93,14 @@ public class RideController {
         ride.setEndCoordinate(endCords);
         ride.setStatGov(rideDTO.getStatGov());
         ride.setEndGov(rideDTO.getEndGov());
+        ride.setConductor(user);
 
-        // Retrieve the logged-in user from the security context
-        AppUser loggedInUser = appUserService.getAuthenticatedUser();
-        if (loggedInUser != null) {
-            ride.setConductor(loggedInUser);
-            model.addAttribute("user", loggedInUser);
-        } else {
-            // Handle the case where no user is logged in
-            throw new RuntimeException("User is not authenticated");
-        }
 
         // Save the ride using the service
         rideService.createRide(ride);
         return "redirect:/rides/myRides";
     }
+
 
     @GetMapping("/ride-visualize/{id}")
     public String visualizeRide (Model model, @PathVariable Long id) {
@@ -324,6 +334,17 @@ public class RideController {
         }
 
         return "/rides/ridedetails";
+    }
+
+    @GetMapping("/create-select")
+    public String newRide (Model model) {
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+        model.addAttribute("RideDTO", new RideDTO());
+        model.addAttribute("apiKey", apiKey);
+        return "rides/enhancedCreateRide";
     }
 
 }

@@ -52,7 +52,9 @@ public class SecurityConfig {
                                 "rides/manage/make-over/",
                                 "/reservations/manage/passengerReservations",
                                 "/reservations/accept/{id}",
-                                "/reservations/status/{id}"
+                                "/reservations/status/{id}",
+                                "/rides/create-select",
+                                "/rate/{rideId}"
                         ).hasRole("CONDUCTOR")
 
                         // All other requests require authentication

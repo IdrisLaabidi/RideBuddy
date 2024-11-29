@@ -8,7 +8,7 @@ public class Review {
     @EmbeddedId
     private ReviewId id; // Composite key
 
-    private Integer rating;
+    private float rating;
     private String comment;
     private Integer punctuality;
     private Integer driving;
@@ -39,11 +39,11 @@ public class Review {
         this.id = id;
     }
 
-    public Integer getRating() {
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(Integer rating) {
+    public void setRating(float rating) {
         this.rating = rating;
     }
 

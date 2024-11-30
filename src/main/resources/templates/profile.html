@@ -6,65 +6,89 @@
   <title>RideBuddy | Profile</title>
   <link rel="icon" type="image/x-icon" href="/photos/rideBuddy-icon.ico">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <style>
+    body {
+      background-color: #f0f8f7;
+    }
+
+    .container {
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+    }
+
+    .text-center img {
+      border: 5px solid #38a89d;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .text-center img:hover {
+      transform: scale(1.1);
+    }
+
+    .btn-primary, .btn-success, .btn-secondary {
+      border-radius: 25px;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+    }
+
+    .btn-primary:hover {
+      background-color: #00796b;
+    }
+
+    .btn-success:hover {
+      background-color: #2e7d32;
+    }
+
+    .btn-secondary:hover {
+      background-color: #6c757d;
+    }
+
+    .form-control:disabled {
+      background-color: #f8f9fa;
+    }
+
+    .alert {
+      border-radius: 10px;
+    }
+
+    hr {
+      border-top: 2px solid #38a89d;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    footer {
+      background-color: #38a89d;
+      color: white;
+      padding: 15px;
+    }
+
+    footer p {
+      margin-bottom: 0;
+    }
+
+    footer a {
+      color: white;
+      font-weight: bold;
+    }
+
+    footer a:hover {
+      color: #00796b;
+      text-decoration: none;
+    }
+  </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid px-5">
-    <a class="navbar-brand" href="/">RideBuddy</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="/">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="/contact">Contact</a>
-        </li>
-      </ul>
-      <ul class="navbar-nav" sec:authorize="!isAuthenticated()">
-        <li class="nav-item">
-          <a href="/register" class="btn btn-outline-primary me-2">Register</a>
-        </li>
-        <li class="nav-item">
-          <a href="/login" class="btn btn-primary">Login</a>
-        </li>
-      </ul>
-
-      <ul class="navbar-nav ms-auto" sec:authorize="isAuthenticated()">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <!-- Profile Picture -->
-            <img th:src="${user.getProfilePic() != null ? '/images/profile-pic' : '/images/placeholder.jpg'}"
-                 alt="Profile"
-                 class="rounded-circle me-2"
-                 style="width: 40px; height: 40px;">
-            <span th:text="${user.getFirst_name()+' '+ user.getLast_name()}">JohnDoe</span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="/profile">Profile</a></li>
-            <li><a class="dropdown-item" href="/setting">Settings</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li>
-              <form sec:authorize="isAuthenticated()" method="post" action="/logout">
-                <input type="hidden" th:name="${_csrf.parameterName}"
-                       th:value="${_csrf.token}"/>
-                <button type="submit" class="dropdown-item">
-                  Logout
-                </button>
-              </form>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
+<div th:replace="fragments/navbar :: navbar(user=${user})"></div>
 <div class="container py-5">
   <h2 class="text-center mb-4">My Profile</h2>
 
-  <!-- Profile Image Section: Centered and bigger image -->
+  <!-- Profile Image Section: Centered and styled -->
   <div class="text-center mb-4">
     <img th:src="${updateProfileDto.getOldProfilePic() != null ? '/images/profile-pic' : '/images/placeholder.jpg'}"
          alt="Profile"
@@ -75,7 +99,7 @@
   <hr/>
 
   <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
-    <strong>Profile updated Successfully !</strong>
+    <strong>Profile updated Successfully!</strong>
     <a class="ms-2" href="/">Home</a>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
@@ -136,6 +160,11 @@
     <button type="button" class="btn btn-secondary d-none" id="cancelButton">Cancel</button>
   </form>
 </div>
+
+<footer class="text-center mt-4">
+  <p>&copy; 2024 RideBuddy. All rights reserved.</p>
+  <a href="#" class="footer-link">Privacy Policy</a> | <a href="#" class="footer-link">Terms of Service</a>
+</footer>
 
 <script>
   const editButton = document.getElementById('editButton');

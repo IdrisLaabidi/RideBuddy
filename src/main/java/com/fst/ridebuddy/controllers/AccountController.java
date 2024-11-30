@@ -4,6 +4,7 @@ import com.fst.ridebuddy.entities.AppUser;
 import com.fst.ridebuddy.models.RegisterDto;
 import com.fst.ridebuddy.repositories.AppUsersRepository;
 import com.fst.ridebuddy.services.AppUserService;
+import com.fst.ridebuddy.services.EmailService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.fst.ridebuddy.models.UpdateProfileDto;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.UUID;
 
 @Controller
 public class AccountController {
@@ -26,6 +29,8 @@ public class AccountController {
     private AppUsersRepository repository;
     @Autowired
     private AppUserService userService;
+    @Autowired
+    private EmailService emailService;
     private static final long MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
 
     @GetMapping("/login")
@@ -102,12 +107,20 @@ public class AccountController {
             newUser.setRole(registerDto.getRole());
             newUser.setEmail(registerDto.getEmail());
             newUser.setPassword(bCryptEncoder.encode(registerDto.getPassword()));
+            String token = UUID.randomUUID().toString();
+            newUser.setEmailVerificationToken(token);
+
 
             if (registerDto.getProfilePic() != null && !registerDto.getProfilePic().isEmpty()) {
                 newUser.setProfilePic(registerDto.getProfilePic().getBytes());
             }
 
             repository.save(newUser);
+            String link = "http://localhost:8080/verify-email?token=" + token;
+            String content = "Welcome to RideBuddy! Please verify your email using the following link: " + link;
+
+            emailService.sendEmail(newUser.getEmail(), "Verify Your Email", content);
+
             model.addAttribute("registerDto", new RegisterDto());
             model.addAttribute("success", true);
         } catch (Exception e) {
@@ -195,6 +208,25 @@ public class AccountController {
 
         model.addAttribute("user", currentUser); // Add updated user back to the model
         return "profile"; // Return to the profile page
+    }
+
+    @GetMapping("/verify-email")
+    public String verifyEmail(@RequestParam("token") String token,Model model) {
+        System.out.println("Verifying email for token: " + token);
+        AppUser user = repository.findByEmailVerificationToken(token);
+
+        if (user == null) {
+            System.out.println("Invalid token provided for email verification: " + token);
+            model.addAttribute("error", "Invalid or expired token. Please try again.");
+            return "error-page"; //todo error page
+        }
+
+        System.out.println("Verifying email for user: " + user.getEmail());
+        user.setEmailVerified(true);
+        user.setEmailVerificationToken(null);
+        repository.save(user);
+
+        return "redirect:/login";
     }
 
 

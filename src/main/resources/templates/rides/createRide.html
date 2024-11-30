@@ -31,6 +31,7 @@
 
     <!-- Form to create a ride -->
     <form id="rideForm" th:action="@{/rides/create}" th:object="${RideDTO}" method="post">
+        <a th:href="@{/rides/create-select}">select start and destination on the map</a>
         <div class="form-group">
             <label for="departureLocation">Departure Location</label>
             <input type="text" id="departureLocation" th:field="*{departureLocation}" class="form-control" required />

@@ -5,6 +5,7 @@ import com.fst.ridebuddy.entities.Reservation;
 import com.fst.ridebuddy.entities.Ride;
 import com.fst.ridebuddy.models.ReservationDto;
 import com.fst.ridebuddy.services.AppUserService;
+import com.fst.ridebuddy.services.NotificationService;
 import com.fst.ridebuddy.services.ReservationsService;
 import com.fst.ridebuddy.services.RideService;
 import jakarta.validation.Valid;
@@ -28,6 +29,9 @@ public class ReservationsController {
 
     @Autowired
     private AppUserService appUserService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     // Load the reservation management page
     @GetMapping("/manage")
@@ -186,6 +190,7 @@ public class ReservationsController {
         Integer availablePlaces = existingRide.getAvailablePlaces();
         existingRide.setAvailablePlaces(availablePlaces - reservedPlaces);
         rideService.updateRide(existingRide.getId_ride(), existingRide);
+        notificationService.notifyAcceptedInRide(res.getUser() , res.getRide());
 
         return "redirect:/reservations/manage";
     }

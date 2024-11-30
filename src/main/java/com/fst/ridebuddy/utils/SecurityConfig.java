@@ -1,5 +1,7 @@
 package com.fst.ridebuddy.utils;
 
+import com.fst.ridebuddy.services.AppUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,6 +18,9 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Autowired
+    private AppUserService appUserService;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -24,7 +29,7 @@ public class SecurityConfig {
                         // Routes accessible to everyone
                         .requestMatchers("/resources/**", "/static/**", "/photos/**").permitAll()
 
-                        .requestMatchers("/", "/contact", "/register", "/login").permitAll()
+                        .requestMatchers("/", "/contact", "/register", "/login" ,"/verify-email").permitAll()
 
                         // Authenticated users
                         .requestMatchers("/profile").authenticated()
@@ -52,7 +57,9 @@ public class SecurityConfig {
                                 "rides/manage/make-over/",
                                 "/reservations/manage/passengerReservations",
                                 "/reservations/accept/{id}",
-                                "/reservations/status/{id}"
+                                "/reservations/status/{id}",
+                                "/rides/create-select",
+                                "/rate/{rideId}"
                         ).hasRole("CONDUCTOR")
 
                         // All other requests require authentication
@@ -67,6 +74,7 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/")
                         .permitAll()
                 )
+                .userDetailsService(appUserService)
                 .build();
     }
 

@@ -44,12 +44,12 @@
         </div>
     </div>
     <a
-            th:if="${!ride.status.equals('over') && hasUserReserved}"
+            th:if="${!ride.status.equals('over')&& !ride.status.equals('canceled') && hasUserReserved}"
             th:href="@{/reservations/manage(rideId=${ride.id_ride})}"
             class="btn btn-primary btn-sm">
         Update Reservation</a>
     <a
-            th:if="${!ride.status.equals('over') && !hasUserReserved}"
+            th:if="${!ride.status.equals('over') && !ride.status.equals('canceled')  && !hasUserReserved}"
             th:href="@{/rides/all-rides(rideId=${ride.id_ride})}"
             class="btn btn-primary btn-sm">
         Make Reservation</a>

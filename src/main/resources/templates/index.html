@@ -8,16 +8,127 @@
     <meta name="_csrf" th:content="${_csrf.token}" />
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #f0f8f7; /* Light background color */
+        }
+
+        header {
+            background-color: #38a89d; /* Main color for header */
+        }
+
+        .header-logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .nav-link {
+            color: white !important;
+            font-weight: bold;
+        }
+
+        .nav-link:hover {
+            color: #00796b !important; /* Hover effect for links */
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+        }
+
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-10px); /* Lift effect on hover */
+        }
+
+        .card-img-top {
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            object-fit: cover;
+            height: 200px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .btn-primary {
+            background-color: #38a89d;
+            border-color: #38a89d;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #00796b;
+            border-color: #00796b;
+        }
+
+        .btn-primary:focus {
+            box-shadow: 0 0 0 0.2rem rgba(38, 177, 152, 0.25);
+        }
+
+        .footer {
+            background-color: #38a89d;
+            color: white;
+            padding: 15px;
+        }
+
+        .footer p {
+            margin-bottom: 0;
+        }
+
+        .footer-link {
+            color: white;
+            font-weight: bold;
+        }
+
+        .footer-link:hover {
+            color: #00796b;
+            text-decoration: none;
+        }
+
+        .stat-box {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box h5 {
+            font-weight: bold;
+        }
+
+        .stat-box p {
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .stat-box:last-child {
+            margin-bottom: 0;
+        }
+    </style>
 </head>
 <body>
+
 <div th:replace="fragments/navbar :: navbar(user=${user})"></div>
+
 <main class="container mt-5">
     <!-- When no user is logged in -->
     <div sec:authorize="!isAuthenticated()">
         <div class="text-center">
             <h1>Welcome to RideBuddy</h1>
             <p>Your trusted carpooling platform for seamless travel.</p>
-            <!-- <img src="https://via.placeholder.com/800x400" alt="Carpooling" class="img-fluid rounded my-4"> -->
             <img th:src="@{photos/rideBuddy.png}" alt="Carpooling" class="img-fluid rounded my-4" onerror="this.src='https://via.placeholder.com/800x400'"/>
             <p>Connect with drivers and passengers to make your trips more enjoyable and cost-effective.</p>
         </div>
@@ -25,13 +136,12 @@
 
     <!-- When a user is logged in -->
     <div sec:authorize="isAuthenticated()">
-
-
         <!-- Features for Conductors -->
         <div sec:authorize="hasRole('CONDUCTOR')">
-            <div class="row g-5">
+            <h3 class="text-center mb-4">Conductor Dashboard</h3>
+            <div class="row g-4">
                 <div class="col-md-4">
-                    <div class="card shadow-sm">
+                    <div class="card">
                         <img src="https://placehold.co/400x200" class="card-img-top" alt="Offer a Ride">
                         <div class="card-body">
                             <h5 class="card-title">Offer a Ride</h5>
@@ -41,7 +151,7 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card shadow-sm">
+                    <div class="card">
                         <img src="https://placehold.co/400x200" class="card-img-top" alt="Rides Management Dashboard">
                         <div class="card-body">
                             <h5 class="card-title">Rides Management Dashboard</h5>
@@ -50,14 +160,13 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-md-4">
-                    <div class="card shadow-sm">
+                    <div class="card">
                         <img src="https://placehold.co/400x200" class="card-img-top" alt="Manage Reservations">
                         <div class="card-body">
                             <h5 class="card-title">Manage Reservations</h5>
                             <p class="card-text">View and manage passenger reservations for your rides.</p>
-                            <a href="/reservations/manage/passengerReservations" class="btn btn-primary">Manage Passenger Reservations for your Rides</a>
+                            <a href="/reservations/manage/passengerReservations" class="btn btn-primary">Manage Passenger Reservations</a>
                         </div>
                     </div>
                 </div>
@@ -66,9 +175,10 @@
 
         <!-- Features for Passengers -->
         <div sec:authorize="hasRole('PASSENGER')">
+            <h3 class="text-center mb-4">Passenger Dashboard</h3>
             <div class="row g-4">
                 <div class="col-md-6">
-                    <div class="card shadow-sm">
+                    <div class="card">
                         <img src="https://placehold.co/400x200" class="card-img-top" alt="Find a Ride">
                         <div class="card-body">
                             <h5 class="card-title">Find a Ride</h5>
@@ -78,8 +188,8 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="card shadow-sm">
-                        <img src="https://placehold.co/400x200" class="card-img-top" alt="Find a Ride">
+                    <div class="card">
+                        <img src="https://placehold.co/400x200" class="card-img-top" alt="Find Nearby Ride">
                         <div class="card-body">
                             <h5 class="card-title">Find a Nearby Ride</h5>
                             <p class="card-text">Search for rides near me.</p>
@@ -88,7 +198,7 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="card shadow-sm">
+                    <div class="card">
                         <img src="https://placehold.co/400x200" class="card-img-top" alt="Manage Bookings">
                         <div class="card-body">
                             <h5 class="card-title">Manage Bookings</h5>
@@ -102,23 +212,28 @@
 
         <!-- User Statistics -->
         <div class="my-5">
-            <h3 class="text-center">Your Statistics</h3>
-            <div class="row text-center">
+            <h3 class="text-center mb-4">Your Statistics</h3>
+            <div class="row">
                 <div class="col-md-4">
-                    <h5>Completed Rides</h5>
-                    <p class="fs-4">25</p>
+                    <div class="stat-box">
+                        <h5>Completed Rides</h5>
+                        <p>25</p>
+                    </div>
                 </div>
                 <div class="col-md-4">
-                    <h5>Ratings Received</h5>
-                    <p class="fs-4" th:text="${user.getAverage_rating()}">4.8 / 5</p>
+                    <div class="stat-box">
+                        <h5>Ratings Received</h5>
+                        <p th:text="${user.getAverage_rating()}">4.8 / 5</p>
+                    </div>
                 </div>
                 <div class="col-md-4">
-                    <h5>Total Earnings (Conductors)</h5>
-                    <p class="fs-4">$320</p>
+                    <div class="stat-box">
+                        <h5>Total Earnings (Conductors)</h5>
+                        <p>$320</p>
+                    </div>
                 </div>
             </div>
         </div>
-
 
         <!-- Testimonials -->
         <div class="my-5 text-center">
@@ -126,11 +241,13 @@
             <p>"RideBuddy has made carpooling so easy! The app is super user-friendly." - Jane Doe</p>
             <p>"I saved so much money on my daily commute using this platform. Highly recommend!" - John Smith</p>
         </div>
+
     </div>
 </main>
 
-<footer class="bg-body-secondary text-center py-3 mt-5">
+<footer class="footer text-center">
     <p>&copy; 2024 RideBuddy. All rights reserved.</p>
+    <a href="#" class="footer-link">Privacy Policy</a> | <a href="#" class="footer-link">Terms of Service</a>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

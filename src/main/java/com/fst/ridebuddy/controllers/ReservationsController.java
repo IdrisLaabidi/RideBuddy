@@ -201,14 +201,7 @@ public class ReservationsController {
             @Valid @ModelAttribute("reservationDto") Reservation reservation
     ) {
         reservationsService.updateReservationStatus(id, "REJECTED");
-
-        Reservation res = reservationsService.getReservationById(id);
-        Long ride_id = res.getRide().getId_ride();
-        Ride existingRide = rideService.getRideById(ride_id);
-        Integer reservedPlaces = res.getReservedPlaces();
-        Integer availablePlaces = existingRide.getAvailablePlaces();
-        existingRide.setAvailablePlaces(availablePlaces - reservedPlaces);
-        rideService.updateRide(existingRide.getId_ride(), existingRide);
+        notificationService.notifyRejectedInRide(reservation.getUser() , reservation.getRide());
 
         return "redirect:/reservations/manage";
     }

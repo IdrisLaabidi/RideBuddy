@@ -209,58 +209,20 @@ public class RideController {
         existingRide.setEndGov(rideDTO.getEndGov());
         // Update the ride in the database
         rideService.updateRide(existingRide.getId_ride(), existingRide);
+        List<AppUser> usersInRide = reservationsService.findUsersInRide(existingRide.getId_ride());
+        notificationService.notifyRideEdited(usersInRide,existingRide);
 
 
         return "redirect:/rides/myRides";
     }
 
-    @PostMapping("/manage/edit")
-    public String updateRide(
-            @ModelAttribute("RideDTO") RideDTO rideDTO,
-            Model model
-    ) {
-        // Ensure authenticated user info is added to the model
-        AppUser user = appUserService.getAuthenticatedUser();
-        if (user != null) {
-            model.addAttribute("user", user);
-        }
-
-        // Map RideDTO back to Ride entity
-        Ride existingRide = rideService.getRideById(rideDTO.getId_ride());
-
-        // Update fields in the existing entity
-        existingRide.setDepartureLocation(rideDTO.getDepartureLocation());
-        existingRide.setDestination(rideDTO.getDestination());
-        existingRide.setDepartureTime(
-                LocalDateTime.of(rideDTO.getDepartureDate(), rideDTO.getDepartureTime()));
-        existingRide.setAvailablePlaces(rideDTO.getAvailablePlaces());
-        existingRide.setPricePerSeat(rideDTO.getPricePerSeat());
-        existingRide.setComments(rideDTO.getComments());
-        existingRide.setStartCoordinate(geoCodingService.getCoordinates(
-                rideDTO.getDepartureLocation() + "," + rideDTO.getStatGov() + ",Tunisia"));
-        existingRide.setEndCoordinate(geoCodingService.getCoordinates(
-                rideDTO.getDestination() + "," + rideDTO.getEndGov() + ",Tunisia"));
-        existingRide.setStatGov(rideDTO.getStatGov());
-        existingRide.setEndGov(rideDTO.getEndGov());
-        // Update the ride in the database
-        rideService.updateRide(existingRide.getId_ride(), existingRide);
-
-        // Redirect to my rides Page
-        return "redirect:/rides/myRides";
-    }
-
-
-    @PostMapping("/manage/rideStatus/{id}")
+    @GetMapping("/manage/delete/{id}")
     public String deleteRide(@PathVariable("id") Long id, Model model) {
-        // Ensure authenticated user info is added to the model
         AppUser user = appUserService.getAuthenticatedUser();
         if (user != null) {
             model.addAttribute("user", user);
         }
-        // Map RideDTO back to Ride entity
-        Ride existingRide = rideService.getRideById(id);
-        existingRide.setStatus("canceled");
-        rideService.updateRide(existingRide.getId_ride(), existingRide);
+        rideService.deleteRide(id);
         return "redirect:/rides/myRides";
     }
 
@@ -309,9 +271,9 @@ public class RideController {
         // Map RideDTO back to Ride entity
         Ride existingRide = rideService.getRideById(id);
         existingRide.setStatus("over");
+        rideService.updateRide(existingRide.getId_ride(), existingRide);
         List<AppUser> usersInRide = reservationsService.findUsersInRide(existingRide.getId_ride());
         notificationService.notifyRideOver(usersInRide,existingRide);
-        rideService.updateRide(existingRide.getId_ride(), existingRide);
         return "redirect:/rides/myRides";
 
 

@@ -250,13 +250,17 @@ public class RideController {
     }
 
 
-    @GetMapping("/manage/delete/{id}")
+    @PostMapping("/manage/rideStatus/{id}")
     public String deleteRide(@PathVariable("id") Long id, Model model) {
+        // Ensure authenticated user info is added to the model
         AppUser user = appUserService.getAuthenticatedUser();
         if (user != null) {
             model.addAttribute("user", user);
         }
-        rideService.deleteRide(id);
+        // Map RideDTO back to Ride entity
+        Ride existingRide = rideService.getRideById(id);
+        existingRide.setStatus("canceled");
+        rideService.updateRide(existingRide.getId_ride(), existingRide);
         return "redirect:/rides/myRides";
     }
 

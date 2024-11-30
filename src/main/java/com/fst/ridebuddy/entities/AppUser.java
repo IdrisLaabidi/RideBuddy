@@ -17,6 +17,8 @@ public class AppUser {
     private String email;
     private String role;
     private String password;
+    private boolean emailVerified = false;
+    private String emailVerificationToken;
 
     @Lob
     private byte[] profilePic; // For storing profile pictures as binary data
@@ -38,6 +40,23 @@ public class AppUser {
     private List<Ride> rides;
 
     // Getters and Setters
+
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public String getEmailVerificationToken() {
+        return emailVerificationToken;
+    }
+
+    public void setEmailVerificationToken(String emailVerificationToken) {
+        this.emailVerificationToken = emailVerificationToken;
+    }
 
     public String getPassword() {
         return password;

@@ -2,7 +2,6 @@ package com.fst.ridebuddy.controllers;
 
 import com.fst.ridebuddy.entities.AppUser;
 import com.fst.ridebuddy.entities.Ride;
-import com.fst.ridebuddy.models.ReservationDto;
 import com.fst.ridebuddy.models.ReviewDto;
 import com.fst.ridebuddy.models.RideDTO;
 import com.fst.ridebuddy.services.*;
@@ -31,6 +30,9 @@ public class RideController {
 
     @Autowired
     private ReservationsService reservationsService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     private final String apiKey = System.getenv("ORS_token");
 
@@ -303,6 +305,8 @@ public class RideController {
         // Map RideDTO back to Ride entity
         Ride existingRide = rideService.getRideById(id);
         existingRide.setStatus("over");
+        List<AppUser> usersInRide = reservationsService.findUsersInRide(existingRide.getId_ride());
+        notificationService.notifyRideOver(usersInRide,existingRide);
         rideService.updateRide(existingRide.getId_ride(), existingRide);
         return "redirect:/rides/myRides";
 

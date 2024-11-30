@@ -18,15 +18,24 @@ public class AppUserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        // Retrieve user by email
         AppUser user = repo.findByEmail(email);
 
-        if (user != null) {
-            return User.withUsername(user.getEmail())
-                    .password(user.getPassword())
-                    .roles(user.getRole())
-                    .build();
+        // Handle case where the user is not found
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with email: " + email);
         }
-        return null;
+
+        // Ensure email is verified before allowing login
+        if (!user.isEmailVerified()) {
+            throw new UsernameNotFoundException("Email not verified for: " + email);
+        }
+
+        // Return UserDetails object for Spring Security
+        return User.withUsername(user.getEmail())
+                .password(user.getPassword())
+                .roles(user.getRole())
+                .build();
     }
 
     public AppUser getAuthenticatedUser() {

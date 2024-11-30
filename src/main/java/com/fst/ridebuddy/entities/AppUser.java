@@ -156,6 +156,38 @@ public class AppUser {
                 .orElse(0.0);
     }
 
+    public float getTotalEarnings() {
+        if (rides == null || rides.isEmpty()) {
+            return 0.0f;
+        }
+
+        return (float) rides.stream()
+                .filter(ride -> "over".equalsIgnoreCase(ride.getStatus()))
+                .mapToDouble(ride -> ride.getReservations().size() * ride.getPricePerSeat().doubleValue())
+                .sum();
+    }
+
+    public int getCompletedRidesAsConductor() {
+        if (rides == null || rides.isEmpty()) {
+            return 0;
+        }
+        return (int) rides.stream()
+                .filter(ride -> "over".equalsIgnoreCase(ride.getStatus()))
+                .count();
+    }
+
+    public int getCompletedRidesAsPassenger() {
+        if (reservations == null || reservations.isEmpty()) {
+            return 0;
+        }
+
+        return (int) reservations.stream()
+                .filter(reservation -> "accepted".equalsIgnoreCase(reservation.getStatus()))
+                .filter(reservation -> reservation.getRide() != null && "over".equalsIgnoreCase(reservation.getRide().getStatus()))
+                .count();
+    }
+
+
     @Override
     public String toString() {
         return "AppUser{" +

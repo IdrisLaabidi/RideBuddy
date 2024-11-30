@@ -88,13 +88,13 @@
       <td>
         <div style="display: flex; justify-content: space-around;" th:if="${reservation.ride.getStatus() == 'in-progress'}">
           <form th:action="@{/reservations/accept/{id}(id=${reservation.getId_res()})}" method="post"
-                th:if="${reservation.status != 'ACCEPTED' and reservation.status != 'REJECTED'}">
+                th:if="${reservation.status != 'ACCEPTED' and reservation.status != 'REJECTED' and reservation.status != 'CANCELED'}">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <button type="submit" class="btn btn-primary btn-sm mt-2 mb-2">Accept</button>
           </form>
           <form th:action="@{/reservations/status/{id}(id=${reservation.getId_res()})}"
                 method="post"
-                th:if="${reservation.status != 'REJECTED' and reservation.status != 'CANCELLED'}">
+                th:if="${reservation.status != 'REJECTED' and reservation.status != 'CANCELED'}">
 
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <input type="hidden" name="status" value="Rejected" />

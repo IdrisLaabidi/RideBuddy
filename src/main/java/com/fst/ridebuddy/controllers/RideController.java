@@ -317,4 +317,18 @@ public class RideController {
         return "rides/enhancedCreateRide";
     }
 
+    @PostMapping("/manage/rideStatus/{id}")
+    public String cancelRide(@PathVariable("id") Long id, Model model) {
+        // Ensure authenticated user info is added to the model
+        AppUser user = appUserService.getAuthenticatedUser();
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+        // Map RideDTO back to Ride entity
+        Ride existingRide = rideService.getRideById(id);
+        existingRide.setStatus("canceled");
+        rideService.updateRide(existingRide.getId_ride(), existingRide);
+        return "redirect:/rides/myRides";
+    }
+
 }

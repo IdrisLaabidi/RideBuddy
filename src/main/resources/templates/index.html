@@ -149,6 +149,47 @@
             z-index: 2; /* Ensure text is above the dimmed image */
             position: relative;
         }
+        /* Bouncing animation */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-15px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Pulsing animation */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Swinging animation */
+        @keyframes swing {
+            20% {
+                transform: rotate(15deg);
+            }
+            40% {
+                transform: rotate(-10deg);
+            }
+            60% {
+                transform: rotate(5deg);
+            }
+            100% {
+                transform: rotate(0);
+            }
+        }
     </style>
 </head>
 <body>
@@ -178,8 +219,8 @@
             <div class="row gy-4">
                 <!-- Left Column -->
                 <div class="col-lg-4">
-                    <div class="card h-100 shadow position-relative">
-                        <div class="card-body">
+                    <div class="card h-100 shadow position-relative overflow-hidden">
+                        <div class="card-body position-relative">
                             <div class="text-center mb-3">
                                 <i class="bi bi-person-circle text-primary" style="font-size: 3rem;"></i>
                             </div>
@@ -187,16 +228,16 @@
                             <p class="text-muted">Find rides with trusted drivers and travel cost-effectively.</p>
                         </div>
                         <!-- Hover Image -->
-                        <div class="hover-img">
-                            <img src="/photos/ridebuddy.png" alt="Passenger" class="img-fluid rounded">
+                        <div class="hover-img position-absolute w-100 h-100 top-0 start-0">
+                            <img src="/photos/passenger.svg" alt="Eco-Friendly" class="img-fluid w-100 h-100" style="object-fit: cover;">
                         </div>
                     </div>
                 </div>
 
                 <!-- Center Column -->
                 <div class="col-lg-4">
-                    <div class="card h-100 shadow position-relative">
-                        <div class="card-body">
+                    <div class="card h-100 shadow position-relative overflow-hidden">
+                        <div class="card-body position-relative">
                             <div class="text-center mb-3">
                                 <i class="bi bi-car-front-fill text-success" style="font-size: 3rem;"></i>
                             </div>
@@ -204,56 +245,58 @@
                             <p class="text-muted">Offer seats in your car and earn while sharing your ride.</p>
                         </div>
                         <!-- Hover Image -->
-                        <div class="hover-img">
-                            <img src="/photos/ridebuddy.png" alt="Driver" class="img-fluid rounded">
+                        <div class="hover-img position-absolute w-100 h-100 top-0 start-0">
+                            <img src="/photos/driver-2.svg" alt="Eco-Friendly" class="img-fluid w-100 h-100" style="object-fit: cover;">
                         </div>
                     </div>
                 </div>
 
-
                 <!-- Right Column -->
                 <div class="col-lg-4">
-                    <div class="card h-100 shadow position-relative">
-                        <div class="card-body">
+                    <div class="card h-100 shadow position-relative overflow-hidden">
+                        <div class="card-body position-relative">
                             <div class="text-center mb-3">
-                                <i class="bi bi-globe text-warning" style="font-size: 3rem;"></i>
+                                <i class="bi bi-globe-europe-africa text-warning" style="font-size: 3rem;"></i>
                             </div>
                             <h5 class="card-title fw-bold text-warning">For the Planet</h5>
                             <p class="text-muted">Reduce your carbon footprint by carpooling and sharing rides.</p>
                         </div>
                         <!-- Hover Image -->
-                        <div class="hover-img">
-                            <img src="/photos/ridebuddy.png" alt="Eco-Friendly" class="img-fluid rounded">
+                        <div class="hover-img position-absolute w-100 h-100 top-0 start-0">
+                            <img src="/photos/world.jpg" alt="Eco-Friendly" class="img-fluid w-100 h-100" style="object-fit: cover;">
                         </div>
                     </div>
                 </div>
-
-            <!-- Call to Action -->
-            <div class="mt-5">
-                <p class="lead fw-bold">Ready to join the carpooling revolution?</p>
-                <a href="/register" class="btn btn-primary btn-lg me-2">Sign Up Now</a>
-                <a href="/login" class="btn btn-secondary btn-lg me-2">Log In</a>
-            </div>
-
-                <div class="row-gy-4">
+            <div>
+                <!-- Stats -->
+                <div class="row-gy-4 mt-5 pt-5">
                     <h2 class="fw-bold text-center mb-4" style="color: #00796b">Statistics 📊</h2>
-                    <!-- Stats -->
                     <div class="container my-5">
                         <div class="row text-center">
                             <div class="col-lg-4">
+                                <div class="d-flex justify-content-center align-items-center mb-3">
+                                    <i class="bi bi-people text-primary" style="font-size: 3rem; animation: bounce 1.5s infinite;"></i>
+                                </div>
                                 <h3 class="fw-bold text-primary">10,000+</h3>
                                 <p class="text-muted">Rides Shared</p>
                             </div>
                             <div class="col-lg-4">
+                                <div class="d-flex justify-content-center align-items-center mb-3">
+                                    <i class="bi bi-person-circle text-success" style="font-size: 3rem; animation: pulse 2s infinite;"></i>
+                                </div>
                                 <h3 class="fw-bold text-success">5,000+</h3>
                                 <p class="text-muted">Active Users</p>
                             </div>
                             <div class="col-lg-4">
+                                <div class="d-flex justify-content-center align-items-center mb-3">
+                                    <i class="bi bi-fuel-pump text-warning" style="font-size: 3rem; animation: swing 1.5s infinite;"></i>
+                                </div>
                                 <h3 class="fw-bold text-warning">2 Tons</h3>
                                 <p class="text-muted">CO₂ Emissions Saved</p>
                             </div>
                         </div>
-                    </div></div>
+                    </div>
+                </div>
 
             <!-- Testimonials Section -->
             <div class="mt-5 pt-5 bg-white">
@@ -296,9 +339,17 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Call to Action -->
+            <div class="mt-5 mt-5 pt-5">
+                <p class="lead fw-bold">Ready to join the carpooling revolution?</p>
+                <a href="/register" class="btn btn-primary btn-lg me-2">Sign Up Now</a>
+                <a href="/login" class="btn btn-secondary btn-lg me-2">Log In</a>
+            </div>
         </div>
     </div>
-
+            </div>
+    </div>
 
     <!-- When a user is logged in -->
     <div sec:authorize="isAuthenticated()">
@@ -308,7 +359,7 @@
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="card">
-                        <img src="https://placehold.co/400x200" class="card-img-top" alt="Offer a Ride">
+                        <img src="/photos/offer_ride.png" class="card-img-top" alt="Offer a Ride">
                         <div class="card-body">
                             <h5 class="card-title">Offer a Ride</h5>
                             <p class="card-text">Share your ride and earn money while helping others travel.</p>
@@ -318,7 +369,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="card">
-                        <img src="https://placehold.co/400x200" class="card-img-top" alt="Rides Management Dashboard">
+                        <img src="/photos/rides%20management%20dashboard.webp" class="card-img-top" alt="Rides Management Dashboard">
                         <div class="card-body">
                             <h5 class="card-title">Rides Management Dashboard</h5>
                             <p class="card-text">Easily view, update, and organize your created rides in one place.</p>
@@ -328,7 +379,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="card">
-                        <img src="https://placehold.co/400x200" class="card-img-top" alt="Manage Reservations">
+                        <img src="/photos/manage_reservations.webp" class="card-img-top" alt="Manage Reservations">
                         <div class="card-body">
                             <h5 class="card-title">Manage Reservations</h5>
                             <p class="card-text">View and manage passenger reservations for your rides.</p>
@@ -345,30 +396,30 @@
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="card">
-                        <img src="https://placehold.co/400x200" class="card-img-top" alt="Find a Ride">
+                        <img src="/photos/find_ride.png" class="card-img-top" alt="Find a Ride">
                         <div class="card-body">
                             <h5 class="card-title">Find a Ride</h5>
-                            <p class="card-text">Search for rides that suit your schedule and preferences.</p>
+                            <p class="card-text">Discover rides tailored to your schedule and needs.</p>
                             <a href="/rides/all-rides" class="btn btn-primary">Find Rides</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card">
-                        <img src="https://placehold.co/400x200" class="card-img-top" alt="Find Nearby Ride">
+                        <img src="/photos/find_nearby_ride.png" class="card-img-top" alt="Find Nearby Ride">
                         <div class="card-body">
                             <h5 class="card-title">Find a Nearby Ride</h5>
-                            <p class="card-text">Search for rides near me.</p>
-                            <a href="/rides/rides-near-me" class="btn btn-primary">Find Rides</a>
+                            <p class="card-text">Easily locate rides near your current location for quick and convenient travel.</p>
+                            <a href="/rides/rides-near-me" class="btn btn-primary">Nearby Rides</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card">
-                        <img src="https://placehold.co/400x200" class="card-img-top" alt="Manage Bookings">
+                        <img src="/photos/manage_bookings.png" class="card-img-top" alt="Manage Bookings">
                         <div class="card-body">
                             <h5 class="card-title">Manage Bookings</h5>
-                            <p class="card-text">View and cancel your ride bookings with ease.</p>
+                            <p class="card-text">View, manage, and cancel your ride bookings, ensuring convenience for your travel plans.</p>
                             <a href="/reservations/manage" class="btn btn-primary">Manage Bookings</a>
                         </div>
                     </div>
@@ -406,14 +457,96 @@
                 </div>
             </div>
         </div>
-
-        <!-- Testimonials -->
-        <div class="my-5 text-center">
-            <h3>What Our Users Say</h3>
-            <p>"RideBuddy has made carpooling so easy! The app is super user-friendly." - Jane Doe</p>
-            <p>"I saved so much money on my daily commute using this platform. Highly recommend!" - John Smith</p>
+        <!-- FAQs -->
+        <div sec:authorize="hasRole('PASSENGER')">
+            <div class="my-5 bg-white p-4 rounded shadow">
+                <h3 class="text-center mb-4">Frequently Asked Questions</h3>
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                How do I book a ride?
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body" style="border: none; padding: 15px;">
+                                Browse available rides, select one that suits your schedule, and click "Book Now."
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Can I cancel a reservation?
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body" style="border: none; padding: 15px;">
+                                Yes, you can cancel a reservation before the ride starts through the "Manage Bookings" section.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                How can I contact the driver?
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body" style="border: none; padding: 15px;">
+                                Once you've booked a ride, the driver's contact details will be available in the "My Rides" section.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
+        <div sec:authorize="hasRole('CONDUCTOR')">
+            <div class="my-5 bg-white p-4 rounded shadow">
+                <h3 class="text-center mb-4">Frequently Asked Questions</h3>
+                <div class="accordion" id="faqAccordion2">
+                    <!-- Question 1 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne2">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne2" aria-expanded="false" aria-controls="collapseOne2">
+                                How do I post a ride?
+                            </button>
+                        </h2>
+                        <div id="collapseOne2" class="accordion-collapse collapse" aria-labelledby="headingOne2" data-bs-parent="#faqAccordion2">
+                            <div class="accordion-body" style="border: none; padding: 15px;">
+                                Go to the "Offer a Ride" section, fill in the details such as departure location, destination, and available seats, and click "Post Ride."
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Question 2 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo2">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo2" aria-expanded="false" aria-controls="collapseTwo2">
+                                How can I manage reservations for my rides?
+                            </button>
+                        </h2>
+                        <div id="collapseTwo2" class="accordion-collapse collapse" aria-labelledby="headingTwo2" data-bs-parent="#faqAccordion2">
+                            <div class="accordion-body" style="border: none; padding: 15px;">
+                                Navigate to the "Manage Reservations" section to view, accept, or reject reservations for your rides.
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Question 3 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingThree2">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree2" aria-expanded="false" aria-controls="collapseThree2">
+                                Can I edit or cancel a posted ride?
+                            </button>
+                        </h2>
+                        <div id="collapseThree2" class="accordion-collapse collapse" aria-labelledby="headingThree2" data-bs-parent="#faqAccordion2">
+                            <div class="accordion-body" style="border: none; padding: 15px;">
+                                Yes, you can edit the details or cancel a ride before it starts. Visit the "Rides Management Dashboard" to make changes.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 

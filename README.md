@@ -1,6 +1,6 @@
 # **RideBuddy**
 
-![RideBuddy Logo](https://github.com/IdrisLaabidi/RideBuddy/blob/master/src/main/resources/static/photos/ridebuddy.png)  
+<img src="https://github.com/IdrisLaabidi/RideBuddy/blob/master/src/main/resources/static/photos/ridebuddy.png" alt="RideBuddy Logo" width="180" height="180">
 *A user-friendly carpooling platform to connect passengers and drivers for seamless and cost-effective rides.*
 
 ## **Features**
